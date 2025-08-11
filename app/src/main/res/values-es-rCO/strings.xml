@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BookRecorder</string>
+    <string name="library">Libreria 📚</string>
+    <string name="add_new_book">Agregar nuevo libro</string>
+    <string name="title">Titulo</string>
+    <string name="author">Autor</string>
+    <string name="genre">"Genero (opcional) "</string>
+    <string name="current_page">Pagina Actual (opcional)</string>
+    <string name="total_pages">Total de páginas</string>
+    <string name="notes">Notas (opcional)</string>
+    <string name="summary">Resumen (opcional)</string>
+    <string name="quotes">Citas (opcional)</string>
+    <string name="finished_reading">"¿Lectura completada? "</string>
+    <string name="save_book">Guardar</string>
+    <string name="add_character">Agregar Personaje</string>
+    <string name="character_name">Nombre de personaje</string>
+    <string name="description">Descripción</string>
+    <string name="page_first_appearance">Número página primera aparición</string>
+    <string name="save_character">Guardar personaje</string>
+</resources>

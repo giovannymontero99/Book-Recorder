@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">BookRecorder</string>
+    <string name="library">Library 📚</string>
+    <string name="add_new_book">Add new book</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="genre">Genre (optional)</string>
+    <string name="current_page">Current page (optional)</string>
+    <string name="total_pages">Total pages</string>
+    <string name="notes">Notes (optional)</string>
+    <string name="summary">Summary (optional)</string>
+    <string name="quotes">Quotes (optional)</string>
+    <string name="finished_reading">Finished reading?</string>
+    <string name="save_book">Save Book</string>
+    <string name="add_character">Add Character</string>
+    <string name="character_name">Character Name</string>
+    <string name="description">Description (optional)</string>
+    <string name="page_first_appearance">Number page first appearance (optional)</string>
+    <string name="save_character">Save Character</string>
+</resources>
