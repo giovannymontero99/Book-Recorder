@@ -4,11 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.data.local.dao.BookDao
 import com.castor.bookrecorder.core.data.local.entity.BookEntity
+import com.castor.bookrecorder.core.domain.model.Book
+import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
+import com.castor.bookrecorder.core.domain.usecase.book.InsertBookUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 
@@ -44,7 +48,8 @@ data class BookState(
 
 @HiltViewModel
 class AddBookViewModel @Inject constructor(
-    private val bookDao: BookDao
+    private val insertBookUseCase: InsertBookUseCase,
+    private val getBookByIdUseCase: GetBookByIdUseCase
 ): ViewModel() {
 
 
@@ -56,32 +61,32 @@ class AddBookViewModel @Inject constructor(
         when(event){
             is AddBookUiState.SaveBook -> {
                 try {
-                    val bookEntity = BookEntity(
+                    val book = Book(
                         id = state.value.id,
                         title = state.value.title,
                         author = state.value.author,
                         genre = state.value.genre,
-                        progress = if(state.value.progress.isEmpty()) 0 else state.value.progress.toInt(),
-                        totalPages = if(state.value.totalPages.isEmpty()) 0 else state.value.totalPages.toInt(),
+                        progress = if (state.value.progress.isEmpty()) 0 else state.value.progress.toInt(),
+                        totalPages = if (state.value.totalPages.isEmpty()) 0 else state.value.totalPages.toInt(),
                         notes = state.value.notes,
                         summary = state.value.summary,
                         quotes = state.value.quotes,
-                        isFinished = state.value.isFinished
+                        isFinished = state.value.isFinished,
+                        startDate = null,
+                        finishDate = null,
+                        coverImageUri = null
                     )
-                    saveBook(bookEntity)
+                    this.saveBook(book)
                 }catch (e: Exception){
                     e.printStackTrace()
                 }
             }
-
             is AddBookUiState.OnSaveNameChange -> {
                 _state.update { it.copy(title = event.name) }
             }
-
             is AddBookUiState.OnSaveAuthorChange -> {
                 _state.update { it.copy(author = event.author) }
             }
-
             is AddBookUiState.OnSaveGenreChange -> {
                 _state.update { it.copy(genre = event.genre) }
             }
@@ -108,7 +113,7 @@ class AddBookViewModel @Inject constructor(
 
     fun getBookById(id: Int){
         viewModelScope.launch {
-            val book = bookDao.getBookById(id)
+            val book = getBookByIdUseCase(id)
             _state.update {
                 it.copy(
                     id = book.id,
@@ -126,10 +131,9 @@ class AddBookViewModel @Inject constructor(
         }
     }
 
-    private fun saveBook(bookEntity: BookEntity){
+    private fun saveBook(book: Book){
         viewModelScope.launch {
-            bookDao.insertBook(bookEntity)
-
+            insertBookUseCase(book)
         }
     }
 
