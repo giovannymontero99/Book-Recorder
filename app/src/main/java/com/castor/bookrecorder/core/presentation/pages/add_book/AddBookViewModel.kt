@@ -2,8 +2,6 @@ package com.castor.bookrecorder.core.presentation.pages.add_book
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.castor.bookrecorder.core.data.local.dao.BookDao
-import com.castor.bookrecorder.core.data.local.entity.BookEntity
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.InsertBookUseCase
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 
@@ -21,14 +18,12 @@ sealed interface AddBookUiState {
     data class OnSaveNameChange(val name: String): AddBookUiState
     data class OnSaveAuthorChange(val author: String): AddBookUiState
     data class OnSaveGenreChange(val genre: String): AddBookUiState
-
     data class OnSaveProgressChange(val progress: String): AddBookUiState
     data class OnSaveTotalPagesChange(val totalPages: String?): AddBookUiState
     data class OnSaveNotesChange(val notes: String): AddBookUiState
     data class OnSaveSummaryChange(val summary: String): AddBookUiState
     data class OnSaveQuotesChange(val quotes: String): AddBookUiState
     data class OnSaveIsFinishedChange(val isFinished: Boolean): AddBookUiState
-
 }
 
 data class BookState(
@@ -52,11 +47,12 @@ class AddBookViewModel @Inject constructor(
     private val getBookByIdUseCase: GetBookByIdUseCase
 ): ViewModel() {
 
-
     private val _state = MutableStateFlow(BookState())
     val state = _state.asStateFlow()
 
-
+    /**
+     * Handle the events from the UI
+     * */
     fun handleEvent(event: AddBookUiState){
         when(event){
             is AddBookUiState.SaveBook -> {
@@ -111,6 +107,9 @@ class AddBookViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Get the book by id from the database
+     * */
     fun getBookById(id: Int){
         viewModelScope.launch {
             val book = getBookByIdUseCase(id)
@@ -131,6 +130,9 @@ class AddBookViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Save the book to the database
+     * */
     private fun saveBook(book: Book){
         viewModelScope.launch {
             insertBookUseCase(book)
