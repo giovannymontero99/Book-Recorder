@@ -6,7 +6,7 @@
     <string name="title">Titulo</string>
     <string name="author">Autor</string>
     <string name="genre">"Genero (opcional) "</string>
-    <string name="current_page">Pagina Actual (opcional)</string>
+    <string name="current_page">Página Actual (opcional)</string>
     <string name="total_pages">Total de páginas</string>
     <string name="notes">Notas (opcional)</string>
     <string name="summary">Resumen (opcional)</string>

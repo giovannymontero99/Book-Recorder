@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.R
-import com.castor.bookrecorder.core.data.local.entity.CharacterEntity
 import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.presentation.component.CardBorder
 

@@ -2,8 +2,6 @@ package com.castor.bookrecorder.core.presentation.pages.book_detail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.castor.bookrecorder.core.data.local.dao.CharacterDao
-import com.castor.bookrecorder.core.data.local.entity.CharacterEntity
 import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.domain.usecase.character.DeleteCharacterByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.character.GetCharactersByBookIdUseCase
