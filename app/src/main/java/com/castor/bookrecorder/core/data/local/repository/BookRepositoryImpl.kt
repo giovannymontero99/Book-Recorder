@@ -1,6 +1,6 @@
 package com.castor.bookrecorder.core.data.local.repository
 
-import com.castor.bookrecorder.core.data.local.service.BookService
+import com.castor.bookrecorder.core.data.local.service.book.BookService
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.repository.BookRepository
 import com.castor.bookrecorder.core.domain.repository.mappers.toBook

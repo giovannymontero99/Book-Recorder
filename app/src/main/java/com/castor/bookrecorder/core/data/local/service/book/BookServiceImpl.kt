@@ -1,4 +1,4 @@
-package com.castor.bookrecorder.core.data.local.service
+package com.castor.bookrecorder.core.data.local.service.book
 
 import com.castor.bookrecorder.core.data.local.dao.BookDao
 import com.castor.bookrecorder.core.data.local.entity.BookEntity

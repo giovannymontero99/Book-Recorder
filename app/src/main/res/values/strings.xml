@@ -17,4 +17,5 @@
     <string name="description">Description (optional)</string>
     <string name="page_first_appearance">Number page first appearance (optional)</string>
     <string name="save_character">Save Character</string>
+    <string name="first_appearance">First appearance at page</string>
 </resources>

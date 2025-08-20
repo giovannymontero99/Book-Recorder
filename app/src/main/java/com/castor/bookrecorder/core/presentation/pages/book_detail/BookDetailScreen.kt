@@ -1,6 +1,5 @@
 package com.castor.bookrecorder.core.presentation.pages.book_detail
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,6 +47,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.R
 import com.castor.bookrecorder.core.data.local.entity.CharacterEntity
+import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.presentation.component.CardBorder
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +60,9 @@ fun BookDetailScreen(
 ) {
 
     val listener = viewModel::listener
-    val characters by viewModel.characters.collectAsState()
+
+    val charactersList by viewModel.charactersList.collectAsState()
+
     var showCharacterForm by remember { mutableStateOf(false) }
 
     var characterName by remember { mutableStateOf("") }
@@ -164,7 +166,7 @@ fun BookDetailScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = {
                             listener(BookDetailEvent.AddCharacter(
-                                CharacterEntity(
+                                Character(
                                     id = characterId,
                                     bookId = id,
                                     name = characterName,
@@ -187,7 +189,7 @@ fun BookDetailScreen(
                 .fillMaxSize()
                 .padding(16.dp),
         ) {
-            items(characters){
+            items(charactersList){
 
                 CharacterCard(
                     character = it,
@@ -210,9 +212,9 @@ fun BookDetailScreen(
 @Composable
 fun CharacterCard(
     modifier: Modifier = Modifier,
-    character: CharacterEntity,
-    onDeleteCharacter: (CharacterEntity) -> Unit,
-    onEditCharacter: (CharacterEntity) -> Unit
+    character: Character,
+    onDeleteCharacter: (Character) -> Unit,
+    onEditCharacter: (Character) -> Unit
 ) {
     CardBorder(
         modifier = modifier
@@ -239,7 +241,7 @@ fun CharacterCard(
                 Text(description, style = MaterialTheme.typography.bodyMedium)
             }
             character.firstAppearancePage?.let { page ->
-                Text("First appearance at page: $page", style = MaterialTheme.typography.bodySmall)
+                Text("${stringResource(R.string.first_appearance)}: $page", style = MaterialTheme.typography.bodySmall)
             }
         }
     }
