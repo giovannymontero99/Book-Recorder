@@ -38,7 +38,7 @@ import com.castor.bookrecorder.R
 @Composable
 fun AddBookScreen(
     modifier: Modifier = Modifier,
-    id: Int = 0,
+    id: Int? = null,
     viewModel: AddBookViewModel = hiltViewModel(),
     onNavigateToHome: () -> Unit = {}
 ) {
@@ -48,7 +48,7 @@ fun AddBookScreen(
     val handleEvent = viewModel::handleEvent
 
     LaunchedEffect(id) {
-        if(id != 0){
+        if(id != null){
             viewModel.getBookById(id)
         }
     }
