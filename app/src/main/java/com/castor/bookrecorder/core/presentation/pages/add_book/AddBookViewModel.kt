@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 sealed interface AddBookUiState {
     data object SaveBook: AddBookUiState
     data class OnSaveNameChange(val name: String): AddBookUiState
@@ -38,8 +37,6 @@ data class BookState(
     val quotes: String? = null,
     val isFinished: Boolean = false
 )
-
-
 
 @HiltViewModel
 class AddBookViewModel @Inject constructor(

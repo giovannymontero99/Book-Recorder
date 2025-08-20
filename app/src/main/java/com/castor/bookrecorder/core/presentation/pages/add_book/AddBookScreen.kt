@@ -24,9 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -95,7 +92,7 @@ fun AddBookScreen(
                 keyboardType = KeyboardType.Number
             )
             AddBookOutlinedTextField(
-                value = state.totalPages?: "",
+                value = state.totalPages,
                 onValueChange = { handleEvent(AddBookUiState.OnSaveTotalPagesChange(it))},
                 labelInt = R.string.total_pages,
                 keyboardType = KeyboardType.Number
