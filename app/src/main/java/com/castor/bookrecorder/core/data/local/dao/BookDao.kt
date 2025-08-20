@@ -1,8 +1,6 @@
 package com.castor.bookrecorder.core.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Upsert
 import com.castor.bookrecorder.core.data.local.entity.BookEntity
@@ -17,7 +15,7 @@ interface BookDao {
     fun getAllBooks(): Flow<List<BookEntity>>
 
     @Query("DELETE FROM books WHERE id = :id")
-    suspend fun deleteBook(id: Int)
+    suspend fun deleteBookById(id: Int)
 
     @Query("SELECT * FROM books WHERE id = :id")
     suspend fun getBookById(id: Int): BookEntity

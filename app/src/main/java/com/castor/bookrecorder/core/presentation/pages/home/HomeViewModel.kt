@@ -2,8 +2,9 @@ package com.castor.bookrecorder.core.presentation.pages.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.castor.bookrecorder.core.data.local.dao.BookDao
-import com.castor.bookrecorder.core.data.local.entity.BookEntity
+import com.castor.bookrecorder.core.domain.model.Book
+import com.castor.bookrecorder.core.domain.usecase.book.DeleteBookByIdUseCase
+import com.castor.bookrecorder.core.domain.usecase.book.GetAllBooksUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,18 +23,23 @@ sealed interface HomeEvent {
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val bookDao: BookDao
+    private val getAllBooksUseCase: GetAllBooksUseCase,
+    private val deleteBookByIdUseCase: DeleteBookByIdUseCase
 ): ViewModel() {
 
 
-    private val _books: MutableStateFlow<List<BookEntity>> = MutableStateFlow(emptyList())
-    val books: StateFlow<List<BookEntity>> = _books.asStateFlow()
+    private val _booksList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
+    val booksList: StateFlow<List<Book>> = _booksList.asStateFlow()
 
 
     init {
+        getAllBooks()
+    }
+
+    private fun getAllBooks(){
         viewModelScope.launch {
-            bookDao.getAllBooks().collectLatest { books ->
-                _books.update { books }
+            getAllBooksUseCase().collectLatest { books ->
+                _booksList.update { books }
             }
         }
     }
@@ -41,21 +47,14 @@ class HomeViewModel @Inject constructor(
     fun onClick(event: HomeEvent){
         when(event){
             is HomeEvent.DeleteBook -> {
-                deleteBook(event.id)
+                removeBookById(event.id)
             }
         }
     }
 
-    private fun deleteBook(id: Int){
+    private fun removeBookById(id: Int){
         viewModelScope.launch {
-            bookDao.deleteBook(id)
-        }
-
-    }
-
-    private fun editBook(id: Int){
-        viewModelScope.launch {
-
+            deleteBookByIdUseCase(id)
         }
     }
 

@@ -2,7 +2,6 @@ package com.castor.bookrecorder.core.presentation.pages.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +52,7 @@ fun HomeScreen(
     onNavigateToAddBook: () -> Unit,
     onNavigateToEditBook: (Int) -> Unit
 ) {
-    val books by viewModel.books.collectAsState()
+    val booksList by viewModel.booksList.collectAsState()
     val onClick = viewModel::onClick
 
 
@@ -71,9 +69,6 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
 
-
-
-
         LazyColumn(
             modifier = modifier
                 .padding(innerPadding)
@@ -83,7 +78,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
 
-            items(books){ item ->
+            items(booksList){ item ->
                 BookTitleItem(
                     title = item.title,
                     author = item.author,
