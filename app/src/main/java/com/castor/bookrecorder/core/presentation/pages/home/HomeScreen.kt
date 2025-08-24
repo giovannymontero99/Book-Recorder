@@ -2,6 +2,7 @@ package com.castor.bookrecorder.core.presentation.pages.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -11,13 +12,17 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,11 +42,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil3.compose.AsyncImage
 import com.castor.bookrecorder.R
 import com.castor.bookrecorder.core.presentation.component.CardBorder
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,10 +59,12 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToBookDetail: (Int, String) -> Unit,
     onNavigateToAddBook: () -> Unit,
-    onNavigateToEditBook: (Int) -> Unit
+    onNavigateToEditBook: (Int) -> Unit,
+    onNavigateToAccount: () -> Unit
 ) {
     val booksList by viewModel.booksList.collectAsState()
     val onClick = viewModel::onClick
+    val auth = Firebase.auth
 
 
 
@@ -64,7 +75,24 @@ fun HomeScreen(
             }
         },
         topBar = {
-            TopAppBar(title = { Text(text = stringResource(R.string.library), color = MaterialTheme.colorScheme.background) })
+            TopAppBar(
+                actions = {
+
+                    AsyncImage(
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(30.dp)
+                            .clip(CircleShape)
+                            .clickable{ onNavigateToAccount() },
+                        model =  auth.currentUser?.photoUrl,
+                        contentDescription = "User profile picture"
+                    )
+                },
+
+                title = {
+                    Text(text = stringResource(R.string.library), color = MaterialTheme.colorScheme.background)
+                }
+            )
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->

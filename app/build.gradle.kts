@@ -5,6 +5,7 @@ plugins {
     id("com.google.devtools.ksp") version "2.2.0-2.0.2"
     id("com.google.dagger.hilt.android") version "2.57"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.0"
+    alias(libs.plugins.google.gms.google.services)
 
 }
 
@@ -53,6 +54,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.firebase.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.play.services.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,6 +78,10 @@ dependencies {
     implementation(libs.androidx.room.ktx)
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.9.3")
+    implementation(libs.androidx.navigation.compose)
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    // For remote url images
+    implementation("io.coil-kt.coil3:coil-compose:3.3.0")
+    implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")
 }

@@ -19,3 +19,9 @@ data class BookDetailRoute(
 data class EditBookRoute(
     val id: Int
 )
+
+@Serializable
+object LoginRoute
+
+@Serializable
+object AccountRoute
