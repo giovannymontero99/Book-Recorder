@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
 import com.castor.bookrecorder.R
+import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.presentation.component.CardBorder
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -59,7 +60,7 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToBookDetail: (Int, String) -> Unit,
     onNavigateToAddBook: () -> Unit,
-    onNavigateToEditBook: (Int) -> Unit,
+    onNavigateToEditBook: (String) -> Unit,
     onNavigateToAccount: () -> Unit
 ) {
     val booksList by viewModel.booksList.collectAsState()
@@ -77,7 +78,6 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 actions = {
-
                     AsyncImage(
                         modifier = Modifier
                             .padding(end = 8.dp)
@@ -114,7 +114,10 @@ fun HomeScreen(
                         onClick(HomeEvent.DeleteBook(item.id))
                     },
                     onClick = {
+                        /*
                         onNavigateToBookDetail(item.id, item.title)
+
+                         */
                     },
                     onEdit = {
                         onNavigateToEditBook(item.id)

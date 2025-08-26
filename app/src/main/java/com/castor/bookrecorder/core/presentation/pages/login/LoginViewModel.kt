@@ -5,21 +5,20 @@ import android.widget.Toast
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import com.castor.bookrecorder.R
+import com.castor.bookrecorder.core.domain.model.User
 import com.castor.bookrecorder.core.domain.usecase.auth.SignInWithCredentialUseCase
-import com.castor.bookrecorder.core.presentation.navigation.AddBookRoute
+import com.castor.bookrecorder.core.domain.usecase.user.CreateUserUseCase
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,14 +27,14 @@ import javax.inject.Inject
 sealed interface AuthResult <T> {
     object Loading: AuthResult<Nothing>
     data class Success<T>(val user: T) : AuthResult<T>
-
 }
 
 
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val signInWithCredentialUseCase: SignInWithCredentialUseCase
+    private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
+    private val createUserUseCase: CreateUserUseCase
 ): ViewModel() {
 
     private val _loginResult = MutableStateFlow<AuthResult<Boolean>?>(null)
@@ -66,8 +65,8 @@ class LoginViewModel @Inject constructor(
 
                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
                     val idToken = googleIdTokenCredential.idToken
-                    signInWithCredentialUseCase(idToken)
-                    _loginResult.update { AuthResult.Success(true) as AuthResult<Boolean> }
+                    val userFirebase = signInWithCredentialUseCase(idToken)
+                    createRemoteUser(userFirebase)
                 }
 
             }catch (e: Exception){
@@ -81,18 +80,21 @@ class LoginViewModel @Inject constructor(
                 ).show()
                 // Update the login result
                 _loginResult.update { null }
-
             }
         }
-
-
-        /*
-
-        val result = signInWithCredentialUseCase()
-        _loginResult.value = result
-
-         */
-
     }
 
+
+    private fun createRemoteUser(userFirebase: FirebaseUser){
+        val user = User(
+            id = userFirebase.uid,
+            name = userFirebase.displayName ?: "",
+            email = userFirebase.email ?: ""
+        )
+        viewModelScope.launch {
+            createUserUseCase(user).collectLatest { success ->
+                if(success) _loginResult.update { AuthResult.Success(true) as AuthResult<Boolean> }
+            }
+        }
+    }
 }

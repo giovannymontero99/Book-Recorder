@@ -36,7 +36,10 @@ class BookDetailViewModel @Inject constructor(
     fun listener(event: BookDetailEvent){
         when(event){
             is BookDetailEvent.SearchCharactersByBook -> {
+                /*
                 searchCharactersByBook(event.id)
+
+                 */
             }
 
             is BookDetailEvent.AddCharacter -> {
@@ -49,11 +52,14 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
-    private fun searchCharactersByBook(id: Int){
+    private fun searchCharactersByBook(id: String){
         viewModelScope.launch {
+            /*
             getCharactersByBookIdUseCase(id).collectLatest { characters ->
                 _charactersList.update { characters }
             }
+
+             */
         }
     }
 

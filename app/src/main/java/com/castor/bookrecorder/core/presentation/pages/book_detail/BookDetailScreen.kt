@@ -53,7 +53,7 @@ import com.castor.bookrecorder.core.presentation.component.CardBorder
 @Composable
 fun BookDetailScreen(
     modifier: Modifier = Modifier,
-    id: Int,
+    id: String?,
     title: String,
     viewModel: BookDetailViewModel = hiltViewModel()
 ) {
@@ -70,7 +70,10 @@ fun BookDetailScreen(
     var characterId by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(id) {
+        /*
         listener(BookDetailEvent.SearchCharactersByBook(id))
+
+         */
     }
     LaunchedEffect(showCharacterForm) {
         if(!showCharacterForm){
@@ -164,6 +167,7 @@ fun BookDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = {
+                            /*
                             listener(BookDetailEvent.AddCharacter(
                                 Character(
                                     id = characterId,
@@ -173,6 +177,8 @@ fun BookDetailScreen(
                                     firstAppearancePage = characterFirstAppearancePage.toIntOrNull()
                                 )
                             ))
+
+                             */
                             showCharacterForm = false
                         }, enabled = characterName.isNotBlank()) {
                             Text(stringResource(R.string.save_character))

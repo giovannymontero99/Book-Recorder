@@ -1,10 +1,14 @@
 package com.castor.bookrecorder.core.presentation.pages.add_book
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.InsertBookUseCase
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +30,7 @@ sealed interface AddBookUiState {
 }
 
 data class BookState(
-    val id: Int = 0,
+    val id: String = "",
     val title: String = "",
     val author: String = "",
     val genre: String? = null,
@@ -35,7 +39,7 @@ data class BookState(
     val notes: String? = null,
     val summary: String? = null,
     val quotes: String? = null,
-    val isFinished: Boolean = false
+    val isFinished: Boolean? = null
 )
 
 @HiltViewModel
@@ -43,6 +47,7 @@ class AddBookViewModel @Inject constructor(
     private val insertBookUseCase: InsertBookUseCase,
     private val getBookByIdUseCase: GetBookByIdUseCase
 ): ViewModel() {
+
 
     private val _state = MutableStateFlow(BookState())
     val state = _state.asStateFlow()
@@ -107,22 +112,26 @@ class AddBookViewModel @Inject constructor(
     /**
      * Get the book by id from the database
      * */
-    fun getBookById(id: Int){
+    fun getBookById(id: String){
         viewModelScope.launch {
+
             val book = getBookByIdUseCase(id)
-            _state.update {
-                it.copy(
-                    id = book.id,
-                    title = book.title,
-                    author = book.author,
-                    genre = book.genre,
-                    progress = if(book.progress == 0) "" else book.progress.toString(),
-                    totalPages = book.totalPages?.let { totalPages -> if(totalPages == 0) "" else totalPages.toString() } ?: "",
-                    notes = book.notes,
-                    summary = book.summary,
-                    quotes = book.quotes,
-                    isFinished = book.isFinished
-                )
+
+            book?.let {
+                _state.update {
+                    it.copy(
+                        id = book.id,
+                        title = book.title,
+                        author = book.author,
+                        genre = book.genre,
+                        progress = if(book.progress == 0) "" else book.progress.toString(),
+                        totalPages = book.totalPages?.let { totalPages -> if(totalPages == 0) "" else totalPages.toString() } ?: "",
+                        notes = book.notes,
+                        summary = book.summary,
+                        quotes = book.quotes,
+                        isFinished = book.isFinished
+                    )
+                }
             }
         }
     }
@@ -135,5 +144,7 @@ class AddBookViewModel @Inject constructor(
             insertBookUseCase(book)
         }
     }
+
+
 
 }

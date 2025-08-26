@@ -17,5 +17,5 @@ data class BookEntity(
     val summary: String? = null,
     val quotes: String? = null,
     val coverImageUri: String? = null,
-    val isFinished: Boolean = false
+    val isFinished: Boolean? = null
 )

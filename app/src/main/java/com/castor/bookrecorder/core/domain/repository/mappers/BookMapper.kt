@@ -4,7 +4,7 @@ import com.castor.bookrecorder.core.data.local.entity.BookEntity
 import com.castor.bookrecorder.core.domain.model.Book
 
 fun Book.toBookEntity(): BookEntity = BookEntity(
-    id = this.id,
+    id = 0,
     title = this.title,
     author = this.author,
     genre = this.genre,
@@ -20,7 +20,7 @@ fun Book.toBookEntity(): BookEntity = BookEntity(
 )
 
 fun BookEntity.toBook(): Book = Book(
-    id = this.id,
+    id = "",
     title = this.title,
     author = this.author,
     genre = this.genre,

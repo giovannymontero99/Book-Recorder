@@ -26,9 +26,6 @@ fun NavigationWrapper(
     viewModel: NavigationWrapperViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
-
-
-
     val isLoggedState by viewModel.isLoggedState.collectAsState()
 
     isLoggedState?.let { isLogged ->
@@ -41,7 +38,10 @@ fun NavigationWrapper(
                         navController.navigate(AddBookRoute)
                     },
                     onNavigateToBookDetail = { id, title ->
+                        /*
                         navController.navigate(BookDetailRoute(id, title))
+                        
+                         */
                     },
                     onNavigateToEditBook = { id ->
                         navController.navigate(EditBookRoute(id))

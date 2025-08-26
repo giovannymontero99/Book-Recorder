@@ -1,10 +1,15 @@
 package com.castor.bookrecorder.core.presentation.pages.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.DeleteBookByIdUseCase
+import com.castor.bookrecorder.core.domain.usecase.book.DeleteRemoteBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.GetAllBooksUseCase
+import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
+import com.castor.bookrecorder.core.domain.usecase.book.GetBooksByUserIdUseCase
+import com.castor.bookrecorder.core.domain.usecase.user.GetCurrentUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +21,7 @@ import javax.inject.Inject
 
 
 sealed interface HomeEvent {
-    data class DeleteBook(val id: Int): HomeEvent
+    data class DeleteBook(val id: String): HomeEvent
 }
 
 
@@ -24,7 +29,10 @@ sealed interface HomeEvent {
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val deleteBookByIdUseCase: DeleteBookByIdUseCase
+    private val deleteBookByIdUseCase: DeleteBookByIdUseCase,
+    private val getBooksByUserIdUseCase: GetBooksByUserIdUseCase,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
+    private val deleteRemoteBookByIdUseCase : DeleteRemoteBookByIdUseCase
 ): ViewModel() {
 
 
@@ -37,10 +45,19 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getAllBooks(){
-        viewModelScope.launch {
-            getAllBooksUseCase().collectLatest { books ->
-                _booksList.update { books }
-            }
+
+        val userId = getCurrentUserIdUseCase()
+        if(userId != null) {
+            getBooksByUserIdUseCase(userId)
+                .addOnSuccessListener { result ->
+                    val userBooks = mutableListOf<Book>()
+                    for (document in result) {
+                        val book = document.toObject(Book::class.java)
+                        book.id = document.id
+                        userBooks.add(book)
+                    }
+                    _booksList.update { userBooks }
+                }
         }
     }
 
@@ -52,9 +69,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun removeBookById(id: Int){
+    private fun removeBookById(id: String){
         viewModelScope.launch {
-            deleteBookByIdUseCase(id)
+            try {
+                deleteRemoteBookByIdUseCase(id)
+                _booksList.update { list -> list.filter { it.id != id } }
+            }catch (e: Exception){
+                Log.d("HomeViewModel", "removeBookById: ${e.message}")
+            }
         }
     }
 

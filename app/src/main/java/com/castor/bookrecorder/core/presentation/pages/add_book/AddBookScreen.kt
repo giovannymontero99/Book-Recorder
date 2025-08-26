@@ -38,7 +38,7 @@ import com.castor.bookrecorder.R
 @Composable
 fun AddBookScreen(
     modifier: Modifier = Modifier,
-    id: Int? = null,
+    id: String? = null,
     viewModel: AddBookViewModel = hiltViewModel(),
     onNavigateToHome: () -> Unit = {}
 ) {
@@ -114,7 +114,7 @@ fun AddBookScreen(
             )
 
             CheckBoxAddBook(
-                isFinished = state.isFinished,
+                isFinished = state.isFinished?: false,
                 onCheckedChange = { handleEvent(AddBookUiState.OnSaveIsFinishedChange(it)) }
             )
 
