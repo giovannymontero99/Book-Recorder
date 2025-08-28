@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetBooksByUserIdUseCase @Inject constructor(
     private val bookRemoteRepository: BookRemoteRepository
 ) {
-    operator fun invoke(userID: String) = bookRemoteRepository.getBooksByUserID(userID)
+    suspend operator fun invoke(userID: String) = bookRemoteRepository.getBooksByUserID(userID)
 }

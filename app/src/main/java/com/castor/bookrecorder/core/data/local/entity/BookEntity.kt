@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "books")
 data class BookEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = false) var id: String,
     val title: String,
     val author: String,
     val genre: String? = null,
@@ -17,5 +17,6 @@ data class BookEntity(
     val summary: String? = null,
     val quotes: String? = null,
     val coverImageUri: String? = null,
-    val isFinished: Boolean? = null
+    val isFinished: Boolean = false,
+    val userID: String
 )

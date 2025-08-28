@@ -6,7 +6,7 @@ import com.google.firebase.firestore.QuerySnapshot
 
 interface BookRemoteRepository {
     suspend fun addBook(book: Book)
-    fun getBooksByUserID(userID: String): Task<QuerySnapshot>
+    suspend fun getBooksByUserID(userID: String)
     suspend fun getBookByID(bookID: String): Book?
 
     suspend fun removeBook(bookID: String)

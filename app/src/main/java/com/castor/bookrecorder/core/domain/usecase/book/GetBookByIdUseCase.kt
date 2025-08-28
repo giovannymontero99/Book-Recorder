@@ -10,8 +10,8 @@ class GetBookByIdUseCase @Inject constructor(
     private val bookRemoteRepository: BookRemoteRepository
 ) {
     suspend operator fun invoke(id: String): Book? {
-        //return bookRepository.getBookById(id);
-        return bookRemoteRepository.getBookByID(id)
+        return bookRepository.getBookById(id);
+        //return bookRemoteRepository.getBookByID(id)
     }
 
 }

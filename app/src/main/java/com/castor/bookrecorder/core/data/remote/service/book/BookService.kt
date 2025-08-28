@@ -1,17 +1,18 @@
 package com.castor.bookrecorder.core.data.remote.service.book
 
+import com.castor.bookrecorder.core.domain.model.Book
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
 
-interface BookRemoteService {
-    fun<K,V> addBook(book: HashMap<K,V>): Task<DocumentReference>
+interface BookService {
+    suspend fun addBook(book: Book): DocumentReference
 
-    fun getBooksByUserID(userID: String): Task<QuerySnapshot>
+    suspend fun getBooksByUserID(userID: String): QuerySnapshot
 
     fun getBookByID(bookID: String): Task<DocumentSnapshot>
-    fun setBookByID(bookID: String, book: Map<String, Any>): Task<Void>
+    suspend fun setBookByID(bookID: String, book: Book): Void
 
     fun removeBook(bookID: String) : Task<Void>
 

@@ -1,11 +1,9 @@
 package com.castor.bookrecorder.core.di.bind
 
-import com.castor.bookrecorder.core.data.local.service.book.BookService
-import com.castor.bookrecorder.core.data.local.service.book.BookServiceImpl
 import com.castor.bookrecorder.core.data.local.service.character.CharacterService
 import com.castor.bookrecorder.core.data.local.service.character.CharacterServiceImpl
-import com.castor.bookrecorder.core.data.remote.service.book.BookRemoteService
-import com.castor.bookrecorder.core.data.remote.service.book.BookRemoteServiceImpl
+import com.castor.bookrecorder.core.data.remote.service.book.BookService
+import com.castor.bookrecorder.core.data.remote.service.book.BookServiceImpl
 import com.castor.bookrecorder.core.data.remote.service.user.UserRemoteService
 import com.castor.bookrecorder.core.data.remote.service.user.UserRemoteServiceImpl
 import dagger.Binds
@@ -19,9 +17,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class ServiceModule {
 
-    @Singleton
-    @Binds
-    abstract fun bindBookService(bookServiceImpl: BookServiceImpl): BookService
 
     @Singleton
     @Binds
@@ -29,7 +24,7 @@ abstract class ServiceModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookRemoteService(bookRemoteServiceImpl: BookRemoteServiceImpl): BookRemoteService
+    abstract fun bindBookService(bookRemoteServiceImpl: BookServiceImpl): BookService
 
     @Singleton
     @Binds

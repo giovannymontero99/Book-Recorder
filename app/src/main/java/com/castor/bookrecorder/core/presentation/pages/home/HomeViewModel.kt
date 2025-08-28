@@ -42,22 +42,21 @@ class HomeViewModel @Inject constructor(
 
     init {
         getAllBooks()
+        viewModelScope.launch {
+            getAllBooksUseCase().collectLatest { list ->
+                _booksList.update { list }
+            }
+
+        }
     }
 
     private fun getAllBooks(){
 
         val userId = getCurrentUserIdUseCase()
         if(userId != null) {
-            getBooksByUserIdUseCase(userId)
-                .addOnSuccessListener { result ->
-                    val userBooks = mutableListOf<Book>()
-                    for (document in result) {
-                        val book = document.toObject(Book::class.java)
-                        book.id = document.id
-                        userBooks.add(book)
-                    }
-                    _booksList.update { userBooks }
-                }
+            viewModelScope.launch {
+                getBooksByUserIdUseCase(userId)
+            }
         }
     }
 

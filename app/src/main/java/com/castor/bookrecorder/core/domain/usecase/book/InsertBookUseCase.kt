@@ -11,8 +11,8 @@ class InsertBookUseCase @Inject constructor(
 ){
     suspend operator fun invoke(book: Book){
         // Insert the book into the local database
-        //bookRepository.insertBook(book)
+        bookRepository.insertBook(book)
         // Insert the book into the remote database
-        bookRemoteRepository.addBook(book)
+        //bookRemoteRepository.addBook(book)
     }
 }

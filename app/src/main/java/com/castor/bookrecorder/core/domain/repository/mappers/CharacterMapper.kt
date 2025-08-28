@@ -1,6 +1,7 @@
 package com.castor.bookrecorder.core.domain.repository.mappers
 
 import com.castor.bookrecorder.core.data.local.entity.CharacterEntity
+import com.castor.bookrecorder.core.data.remote.dto.CharacterDto
 import com.castor.bookrecorder.core.domain.model.Character
 
 fun CharacterEntity.toModel(): Character {
@@ -22,3 +23,11 @@ fun Character.toEntity(): CharacterEntity {
         firstAppearancePage = this.firstAppearancePage,
     )
 }
+
+fun CharacterDto.toCharacter() = Character(
+    id = this.id,
+    bookId = this.bookId,
+    name = this.name,
+    description = this.description,
+    firstAppearancePage = this.firstAppearancePage,
+)

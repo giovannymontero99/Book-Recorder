@@ -1,6 +1,6 @@
-package com.castor.bookrecorder.core.domain.model
+package com.castor.bookrecorder.core.data.remote.dto
 
-data class Book(
+data class BookDto(
     var id: String = "",
     val title: String = "",
     val author: String = "",
@@ -14,5 +14,5 @@ data class Book(
     val quotes: String? = null,
     val coverImageUri: String? = null,
     var isFinished: Boolean = false,
-    val userID: String = ""
+    val characters: List<CharacterDto> = emptyList()
 )

@@ -6,11 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.InsertBookUseCase
+import com.castor.bookrecorder.core.domain.usecase.user.GetCurrentUserIdUseCase
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,6 +31,12 @@ sealed interface AddBookUiState {
     data class OnSaveIsFinishedChange(val isFinished: Boolean): AddBookUiState
 }
 
+
+sealed interface NavigationState {
+    data object NavigateToHome: NavigationState
+    data object NavigateToProfile: NavigationState
+}
+
 data class BookState(
     val id: String = "",
     val title: String = "",
@@ -39,14 +47,19 @@ data class BookState(
     val notes: String? = null,
     val summary: String? = null,
     val quotes: String? = null,
-    val isFinished: Boolean? = null
+    val isFinished: Boolean = false
 )
 
 @HiltViewModel
 class AddBookViewModel @Inject constructor(
     private val insertBookUseCase: InsertBookUseCase,
-    private val getBookByIdUseCase: GetBookByIdUseCase
+    private val getBookByIdUseCase: GetBookByIdUseCase,
+    private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase
 ): ViewModel() {
+
+
+    private val _navigationState: MutableStateFlow<NavigationState?> = MutableStateFlow(null)
+    val navigationState: StateFlow<NavigationState?> = _navigationState.asStateFlow()
 
 
     private val _state = MutableStateFlow(BookState())
@@ -72,9 +85,10 @@ class AddBookViewModel @Inject constructor(
                         isFinished = state.value.isFinished,
                         startDate = null,
                         finishDate = null,
-                        coverImageUri = null
+                        coverImageUri = null,
+                        userID = getCurrentUserIdUseCase() ?: ""
                     )
-                    this.saveBook(book)
+                    saveBook(book)
                 }catch (e: Exception){
                     e.printStackTrace()
                 }
@@ -142,6 +156,7 @@ class AddBookViewModel @Inject constructor(
     private fun saveBook(book: Book){
         viewModelScope.launch {
             insertBookUseCase(book)
+            _navigationState.update { NavigationState.NavigateToHome }
         }
     }
 

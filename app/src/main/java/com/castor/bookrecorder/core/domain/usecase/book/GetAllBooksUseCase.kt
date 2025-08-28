@@ -7,4 +7,6 @@ class GetAllBooksUseCase @Inject constructor(
     private val booksRepository: BookRepository
 ) {
     operator fun invoke() = booksRepository.getAllBooks()
+
+
 }

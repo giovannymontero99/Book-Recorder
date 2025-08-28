@@ -47,9 +47,17 @@ fun AddBookScreen(
     val state by viewModel.state.collectAsState()
     val handleEvent = viewModel::handleEvent
 
+    val navigationState by viewModel.navigationState.collectAsState()
+
     LaunchedEffect(id) {
         if(id != null){
             viewModel.getBookById(id)
+        }
+    }
+
+    LaunchedEffect(navigationState) {
+        if(navigationState is NavigationState.NavigateToHome) {
+            onNavigateToHome()
         }
     }
 
@@ -114,7 +122,7 @@ fun AddBookScreen(
             )
 
             CheckBoxAddBook(
-                isFinished = state.isFinished?: false,
+                isFinished = state.isFinished,
                 onCheckedChange = { handleEvent(AddBookUiState.OnSaveIsFinishedChange(it)) }
             )
 
@@ -122,8 +130,9 @@ fun AddBookScreen(
 
             Button(
                 onClick = {
-                    handleEvent(AddBookUiState.SaveBook)
-                    onNavigateToHome()
+                    handleEvent(
+                        AddBookUiState.SaveBook
+                    )
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

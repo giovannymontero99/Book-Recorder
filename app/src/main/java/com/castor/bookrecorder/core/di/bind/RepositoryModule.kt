@@ -1,7 +1,7 @@
 package com.castor.bookrecorder.core.di.bind
 
-import com.castor.bookrecorder.core.data.local.repository.BookRepositoryImpl
-import com.castor.bookrecorder.core.data.local.repository.CharacterRepositoryImpl
+import com.castor.bookrecorder.core.data.BookRepositoryImpl
+import com.castor.bookrecorder.core.data.CharacterRepositoryImpl
 import com.castor.bookrecorder.core.data.remote.repository.AuthRepositoryImpl
 import com.castor.bookrecorder.core.data.remote.repository.BookRemoteRepositoryImpl
 import com.castor.bookrecorder.core.data.remote.repository.UserRemoteRepositoryImpl

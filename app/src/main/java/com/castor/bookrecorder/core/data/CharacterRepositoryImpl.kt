@@ -1,4 +1,4 @@
-package com.castor.bookrecorder.core.data.local.repository
+package com.castor.bookrecorder.core.data
 
 import com.castor.bookrecorder.core.data.local.service.character.CharacterService
 import com.castor.bookrecorder.core.domain.model.Character
