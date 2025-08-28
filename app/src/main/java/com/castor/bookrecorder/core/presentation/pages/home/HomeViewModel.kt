@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.DeleteBookByIdUseCase
-import com.castor.bookrecorder.core.domain.usecase.book.DeleteRemoteBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.GetAllBooksUseCase
-import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.GetBooksByUserIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.user.GetCurrentUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

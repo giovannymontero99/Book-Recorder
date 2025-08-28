@@ -81,9 +81,4 @@ class BookRepositoryImpl @Inject constructor(
             }
         }
     }
-
-    private suspend fun deleteAllBooks(){
-        bookDao.deleteAllBooks()
-    }
-
 }
