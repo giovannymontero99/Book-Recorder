@@ -9,7 +9,7 @@ interface BookRepository {
 
     fun getAllBooks(): Flow<List<Book>>
 
-    suspend fun deleteBookById(id: Int)
+    suspend fun deleteBookById(id: String)
 
     suspend fun syncBooks()
 

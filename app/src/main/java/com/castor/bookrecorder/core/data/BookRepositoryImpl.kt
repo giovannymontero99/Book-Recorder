@@ -52,8 +52,13 @@ class BookRepositoryImpl @Inject constructor(
         throw Exception("User not logged in")
     }
 
-    override suspend fun deleteBookById(id: Int) {
-        bookDao.deleteBookById(id)
+    override suspend fun deleteBookById(id: String) {
+        try {
+            bookDao.deleteBookById(id)
+            bookService.removeBook(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override suspend fun syncBooks() {
@@ -76,7 +81,6 @@ class BookRepositoryImpl @Inject constructor(
             }
         }
     }
-
 
     private suspend fun deleteAllBooks(){
         bookDao.deleteAllBooks()

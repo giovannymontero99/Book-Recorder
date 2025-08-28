@@ -67,8 +67,6 @@ fun HomeScreen(
     val onClick = viewModel::onClick
     val auth = Firebase.auth
 
-
-
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { onNavigateToAddBook() }) {

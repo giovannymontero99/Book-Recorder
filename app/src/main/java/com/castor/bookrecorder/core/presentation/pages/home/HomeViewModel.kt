@@ -32,7 +32,6 @@ class HomeViewModel @Inject constructor(
     private val deleteBookByIdUseCase: DeleteBookByIdUseCase,
     private val getBooksByUserIdUseCase: GetBooksByUserIdUseCase,
     private val getCurrentUserIdUseCase: GetCurrentUserIdUseCase,
-    private val deleteRemoteBookByIdUseCase : DeleteRemoteBookByIdUseCase
 ): ViewModel() {
 
 
@@ -71,8 +70,7 @@ class HomeViewModel @Inject constructor(
     private fun removeBookById(id: String){
         viewModelScope.launch {
             try {
-                deleteRemoteBookByIdUseCase(id)
-                _booksList.update { list -> list.filter { it.id != id } }
+                deleteBookByIdUseCase(id)
             }catch (e: Exception){
                 Log.d("HomeViewModel", "removeBookById: ${e.message}")
             }

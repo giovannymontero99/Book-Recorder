@@ -15,7 +15,7 @@ interface BookDao {
     fun getAllBooks(): Flow<List<BookEntity>>
 
     @Query("DELETE FROM books WHERE id = :id")
-    suspend fun deleteBookById(id: Int)
+    suspend fun deleteBookById(id: String)
 
     @Query("SELECT * FROM books WHERE id = :id")
     suspend fun getBookById(id: String): BookEntity
