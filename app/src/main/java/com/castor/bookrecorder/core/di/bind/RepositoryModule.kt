@@ -2,14 +2,16 @@ package com.castor.bookrecorder.core.di.bind
 
 import com.castor.bookrecorder.core.data.BookRepositoryImpl
 import com.castor.bookrecorder.core.data.CharacterRepositoryImpl
-import com.castor.bookrecorder.core.data.remote.repository.AuthRepositoryImpl
+import com.castor.bookrecorder.core.data.AuthRepositoryImpl
+import com.castor.bookrecorder.core.data.SyncRepositoryImpl
+import com.castor.bookrecorder.core.data.UserRepositoryImpl
 import com.castor.bookrecorder.core.data.remote.repository.BookRemoteRepositoryImpl
-import com.castor.bookrecorder.core.data.remote.repository.UserRemoteRepositoryImpl
 import com.castor.bookrecorder.core.domain.repository.AuthRepository
 import com.castor.bookrecorder.core.domain.repository.BookRepository
 import com.castor.bookrecorder.core.domain.repository.CharacterRepository
 import com.castor.bookrecorder.core.domain.repository.BookRemoteRepository
-import com.castor.bookrecorder.core.domain.repository.UserRemoteRepository
+import com.castor.bookrecorder.core.domain.repository.SyncRepository
+import com.castor.bookrecorder.core.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -39,5 +41,9 @@ abstract class RepositoryModule {
 
     @Singleton
     @Binds
-    abstract fun bindUserRemoteRepository(userRemoteRepositoryImpl: UserRemoteRepositoryImpl): UserRemoteRepository
+    abstract fun bindUserRepository(userRemoteRepositoryImpl: UserRepositoryImpl): UserRepository
+
+    @Singleton
+    @Binds
+    abstract fun bindSyncRepository(syncRepositoryImpl: SyncRepositoryImpl): SyncRepository
 }

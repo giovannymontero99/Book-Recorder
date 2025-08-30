@@ -1,32 +1,30 @@
-package com.castor.bookrecorder.core.data.remote.repository
+package com.castor.bookrecorder.core.data
 
 import android.util.Log
-import com.castor.bookrecorder.core.data.remote.service.user.UserRemoteService
+import com.castor.bookrecorder.core.data.remote.service.user.UserService
 import com.castor.bookrecorder.core.domain.model.User
-import com.castor.bookrecorder.core.domain.repository.UserRemoteRepository
-import com.google.firebase.Timestamp
+import com.castor.bookrecorder.core.domain.repository.UserRepository
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Transaction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
-class UserRemoteRepositoryImpl @Inject constructor(
-    private val userRemoteService: UserRemoteService,
+class UserRepositoryImpl @Inject constructor(
+    private val userRemoteService: UserService,
     private val firebaseFirestore: FirebaseFirestore
-): UserRemoteRepository {
+): UserRepository {
     override fun addUser(user: User): Flow<Boolean> = flow{
 
         val userRef = userRemoteService.getUserRef(user.id)
 
         val userMap = hashMapOf(
             "name" to user.name,
-            "email" to user.email
+            "email" to user.email,
+            "photoUrl" to user.photoUrl,
+            "phoneNumber" to user.phoneNumber
         )
         try {
             firebaseFirestore.runTransaction { transaction ->
@@ -53,4 +51,4 @@ class UserRemoteRepositoryImpl @Inject constructor(
     }
 }
 
-private fun FirebaseFirestore.runTransaction(updateFunction: (com.google.firebase.firestore.Transaction) -> String?) {}
+private fun FirebaseFirestore.runTransaction(updateFunction: (Transaction) -> String?) {}

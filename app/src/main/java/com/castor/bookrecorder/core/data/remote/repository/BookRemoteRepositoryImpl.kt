@@ -3,7 +3,7 @@ package com.castor.bookrecorder.core.data.remote.repository
 import android.util.Log
 import com.castor.bookrecorder.core.data.remote.dto.BookDto
 import com.castor.bookrecorder.core.data.remote.service.book.BookService
-import com.castor.bookrecorder.core.data.remote.service.user.UserRemoteService
+import com.castor.bookrecorder.core.data.remote.service.user.UserService
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.domain.repository.BookRemoteRepository
@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class BookRemoteRepositoryImpl @Inject constructor(
-    private val userRemoteService: UserRemoteService,
+    private val userRemoteService: UserService,
     private val bookRemoteService: BookService,
 ): BookRemoteRepository {
     override suspend fun addBook(book: Book) {

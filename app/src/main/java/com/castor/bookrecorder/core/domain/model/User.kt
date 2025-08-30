@@ -1,7 +1,11 @@
 package com.castor.bookrecorder.core.domain.model
 
+import android.net.Uri
+
 data class User(
     val id: String,
     val name: String,
-    val email: String
+    val email: String,
+    val photoUrl: Uri?,
+    val phoneNumber: String?,
 )

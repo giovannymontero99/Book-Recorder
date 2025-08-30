@@ -41,7 +41,7 @@ class BookServiceImpl @Inject constructor(
     override suspend fun getBooksByUserID(userID: String): QuerySnapshot {
         return firebaseFirestore
             .collection("books")
-            .whereEqualTo("userId", userID)
+            .whereEqualTo("userID", userID)
             .get()
             .await()
     }

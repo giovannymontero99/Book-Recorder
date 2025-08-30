@@ -10,10 +10,11 @@ import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.R
 import com.castor.bookrecorder.core.domain.model.User
 import com.castor.bookrecorder.core.domain.usecase.auth.SignInWithCredentialUseCase
+import com.castor.bookrecorder.core.domain.usecase.sync.SyncDataUseCase
 import com.castor.bookrecorder.core.domain.usecase.user.CreateUserUseCase
+import com.castor.bookrecorder.core.presentation.state.NavigationState
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -34,8 +35,12 @@ sealed interface AuthResult <T> {
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val signInWithCredentialUseCase: SignInWithCredentialUseCase,
-    private val createUserUseCase: CreateUserUseCase
+    private val createUserUseCase: CreateUserUseCase,
+    private val syncDataUseCase: SyncDataUseCase
 ): ViewModel() {
+
+    private val _navigationState = MutableStateFlow<NavigationState?>(null)
+    val navigationState: StateFlow<NavigationState?> = _navigationState.asStateFlow()
 
     private val _loginResult = MutableStateFlow<AuthResult<Boolean>?>(null)
     val loginResult: StateFlow<AuthResult<Boolean>?> = _loginResult.asStateFlow()
@@ -65,8 +70,25 @@ class LoginViewModel @Inject constructor(
 
                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
                     val idToken = googleIdTokenCredential.idToken
+
                     val userFirebase = signInWithCredentialUseCase(idToken)
-                    createRemoteUser(userFirebase)
+
+                    val user = User(
+                        id = userFirebase.uid,
+                        name = userFirebase.displayName ?: "",
+                        email = userFirebase.email ?: "",
+                        photoUrl = userFirebase.photoUrl,
+                        phoneNumber = userFirebase.phoneNumber
+                    )
+                    createUserUseCase(user).collectLatest { success ->
+                        if(success){
+                            // Sync data
+                            syncDataUseCase()
+                            // Navigate to home screen
+                            _navigationState.update { NavigationState.NavigateToHome }
+                        }
+                    }
+
                 }
 
             }catch (e: Exception){
@@ -80,20 +102,6 @@ class LoginViewModel @Inject constructor(
                 ).show()
                 // Update the login result
                 _loginResult.update { null }
-            }
-        }
-    }
-
-
-    private fun createRemoteUser(userFirebase: FirebaseUser){
-        val user = User(
-            id = userFirebase.uid,
-            name = userFirebase.displayName ?: "",
-            email = userFirebase.email ?: ""
-        )
-        viewModelScope.launch {
-            createUserUseCase(user).collectLatest { success ->
-                if(success) _loginResult.update { AuthResult.Success(true) as AuthResult<Boolean> }
             }
         }
     }

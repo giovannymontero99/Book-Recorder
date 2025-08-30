@@ -6,10 +6,10 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import javax.inject.Inject
 
-class UserRemoteServiceImpl @Inject constructor(
+class UserServiceImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val firebaseFirestore: FirebaseFirestore
-): UserRemoteService {
+): UserService {
     override fun getCurrentUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }

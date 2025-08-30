@@ -66,3 +66,20 @@ fun Book.toBookDto(): BookDto = BookDto(
     quotes = this.quotes,
     isFinished = this.isFinished
 )
+
+fun BookDto.toBookEntity(): BookEntity = BookEntity(
+    id = this.id,
+    title = this.title,
+    author = this.author,
+    genre = this.genre,
+    startDate = this.startDate,
+    finishDate = this.finishDate,
+    progress = this.progress,
+    totalPages = this.totalPages,
+    notes = this.notes,
+    summary = this.summary,
+    quotes = this.quotes,
+    coverImageUri = this.coverImageUri,
+    isFinished = this.isFinished,
+    userID = this.userID
+)

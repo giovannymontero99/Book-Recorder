@@ -7,6 +7,7 @@ import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.GetBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.InsertBookUseCase
 import com.castor.bookrecorder.core.domain.usecase.user.GetCurrentUserIdUseCase
+import com.castor.bookrecorder.core.presentation.state.NavigationState
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
@@ -29,12 +30,6 @@ sealed interface AddBookUiState {
     data class OnSaveSummaryChange(val summary: String): AddBookUiState
     data class OnSaveQuotesChange(val quotes: String): AddBookUiState
     data class OnSaveIsFinishedChange(val isFinished: Boolean): AddBookUiState
-}
-
-
-sealed interface NavigationState {
-    data object NavigateToHome: NavigationState
-    data object NavigateToProfile: NavigationState
 }
 
 data class BookState(

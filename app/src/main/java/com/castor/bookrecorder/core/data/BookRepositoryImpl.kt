@@ -2,7 +2,7 @@ package com.castor.bookrecorder.core.data
 
 import com.castor.bookrecorder.core.data.local.dao.BookDao
 import com.castor.bookrecorder.core.data.remote.dto.BookDto
-import com.castor.bookrecorder.core.data.remote.service.user.UserRemoteService
+import com.castor.bookrecorder.core.data.remote.service.user.UserService
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.domain.repository.BookRepository
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class BookRepositoryImpl @Inject constructor(
-    private val userRemoteService: UserRemoteService,
+    private val userRemoteService: UserService,
     private val bookService: com.castor.bookrecorder.core.data.remote.service.book.BookService,
     private val bookDao: BookDao
 ): BookRepository {

@@ -1,4 +1,4 @@
-package com.castor.bookrecorder.core.data.remote.repository
+package com.castor.bookrecorder.core.data
 
 import com.castor.bookrecorder.core.domain.repository.AuthRepository
 import com.google.firebase.Firebase

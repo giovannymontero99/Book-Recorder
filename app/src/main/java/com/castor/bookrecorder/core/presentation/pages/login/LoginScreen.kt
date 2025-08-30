@@ -1,6 +1,5 @@
 package com.castor.bookrecorder.core.presentation.pages.login
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.castor.bookrecorder.core.presentation.state.NavigationState
 
 @Composable
 fun LoginScreen(
@@ -29,7 +29,14 @@ fun LoginScreen(
 
     val loginResult by viewModel.loginResult.collectAsState()
     val context = LocalContext.current
+    val navigationState by viewModel.navigationState.collectAsState()
 
+    when(navigationState){
+        is NavigationState.NavigateToHome -> {
+            navigateToHome()
+        }
+        else -> {}
+    }
 
     when(loginResult){
         AuthResult.Loading -> {
@@ -42,9 +49,7 @@ fun LoginScreen(
             }
         }
         is AuthResult.Success<Boolean> -> {
-            if((loginResult as AuthResult.Success<Boolean>).user){
-                navigateToHome()
-            }
+
         }
         else -> {
             Box(
