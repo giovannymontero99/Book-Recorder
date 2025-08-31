@@ -38,10 +38,7 @@ fun NavigationWrapper(
                         navController.navigate(AddBookRoute)
                     },
                     onNavigateToBookDetail = { id, title ->
-                        /*
                         navController.navigate(BookDetailRoute(id, title))
-                        
-                         */
                     },
                     onNavigateToEditBook = { id ->
                         navController.navigate(EditBookRoute(id))

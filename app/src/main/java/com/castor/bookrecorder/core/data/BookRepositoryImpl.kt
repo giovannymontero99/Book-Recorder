@@ -1,21 +1,19 @@
 package com.castor.bookrecorder.core.data
 
 import com.castor.bookrecorder.core.data.local.dao.BookDao
-import com.castor.bookrecorder.core.data.remote.dto.BookDto
+import com.castor.bookrecorder.core.data.remote.service.book.BookService
 import com.castor.bookrecorder.core.data.remote.service.user.UserService
 import com.castor.bookrecorder.core.domain.model.Book
-import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.domain.repository.BookRepository
 import com.castor.bookrecorder.core.domain.repository.mappers.toBook
 import com.castor.bookrecorder.core.domain.repository.mappers.toBookEntity
-import com.castor.bookrecorder.core.domain.repository.mappers.toCharacter
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class BookRepositoryImpl @Inject constructor(
     private val userRemoteService: UserService,
-    private val bookService: com.castor.bookrecorder.core.data.remote.service.book.BookService,
+    private val bookService: BookService,
     private val bookDao: BookDao
 ): BookRepository {
     override suspend fun insertBook(book: Book) {
@@ -58,27 +56,6 @@ class BookRepositoryImpl @Inject constructor(
             bookService.removeBook(id)
         } catch (e: Exception) {
             e.printStackTrace()
-        }
-    }
-
-    override suspend fun syncBooks() {
-        val userId = userRemoteService.getCurrentUserId()
-        if (userId != null) {
-            try {
-                val documents = bookService.getBooksByUserID(userId)
-                val listCharacter = mutableListOf<Character>()
-                for (document in documents) {
-                    val bookDto = document.toObject(BookDto::class.java)
-                    bookDto.id = document.id
-                    bookDto.isFinished = document.getBoolean("isFinished") ?: false
-                    insertBook(bookDto.toBook())
-                    for (character in bookDto.characters) {
-                        listCharacter.add(character.toCharacter())
-                    }
-                }
-            }catch (e: Exception){
-                e.printStackTrace()
-            }
         }
     }
 }

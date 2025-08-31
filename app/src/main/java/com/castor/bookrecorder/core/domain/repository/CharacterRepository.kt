@@ -4,7 +4,7 @@ import com.castor.bookrecorder.core.domain.model.Character
 import kotlinx.coroutines.flow.Flow
 
 interface CharacterRepository {
-    fun getCharacterByBookId(bookId: Int): Flow<List<Character>>
+    fun getCharacterByBookId(bookId: String): Flow<List<Character>>
 
     suspend fun upsertCharacter(character: Character)
 

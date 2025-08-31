@@ -19,7 +19,7 @@ import androidx.room.PrimaryKey
 )
 data class CharacterEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val bookId: Int,
+    val bookId: String,
     val name: String,
     val description: String? = null,
     val firstAppearancePage: Int? = null

@@ -31,3 +31,11 @@ fun CharacterDto.toCharacter() = Character(
     description = this.description,
     firstAppearancePage = this.firstAppearancePage,
 )
+
+fun CharacterDto.toEntity() = CharacterEntity(
+    id = this.id,
+    bookId = this.bookId,
+    name = this.name,
+    description = this.description,
+    firstAppearancePage = this.firstAppearancePage,
+)

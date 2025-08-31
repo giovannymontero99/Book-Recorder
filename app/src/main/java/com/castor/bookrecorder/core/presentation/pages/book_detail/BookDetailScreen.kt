@@ -70,10 +70,7 @@ fun BookDetailScreen(
     var characterId by remember { mutableIntStateOf(0) }
 
     LaunchedEffect(id) {
-        /*
-        listener(BookDetailEvent.SearchCharactersByBook(id))
-
-         */
+        if (id != null) listener(BookDetailEvent.SearchCharactersByBook(id))
     }
     LaunchedEffect(showCharacterForm) {
         if(!showCharacterForm){
@@ -167,18 +164,17 @@ fun BookDetailScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Button(onClick = {
-                            /*
+
                             listener(BookDetailEvent.AddCharacter(
                                 Character(
                                     id = characterId,
-                                    bookId = id,
+                                    bookId = id ?: "",
                                     name = characterName,
-                                    description = characterDescription.ifEmpty { null },
+                                    description = characterDescription,
                                     firstAppearancePage = characterFirstAppearancePage.toIntOrNull()
                                 )
                             ))
 
-                             */
                             showCharacterForm = false
                         }, enabled = characterName.isNotBlank()) {
                             Text(stringResource(R.string.save_character))
@@ -199,7 +195,9 @@ fun BookDetailScreen(
                 CharacterCard(
                     character = it,
                     onDeleteCharacter = { character ->
+                        /*
                         listener(BookDetailEvent.DeleteCharacter(character.id))
+                         */
                     },
                     onEditCharacter = { character ->
                         characterId = character.id

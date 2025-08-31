@@ -1,7 +1,7 @@
 package com.castor.bookrecorder.core.data.remote.dto
 
 data class BookDto(
-    var id: String = "",
+    val id: String = "",
     val title: String = "",
     val author: String = "",
     val genre: String? = null,
@@ -13,7 +13,7 @@ data class BookDto(
     val summary: String? = null,
     val quotes: String? = null,
     val coverImageUri: String? = null,
-    var isFinished: Boolean = false,
+    val isFinished: Boolean = false,
     val userID: String = "",
     val characters: List<CharacterDto> = emptyList()
 )

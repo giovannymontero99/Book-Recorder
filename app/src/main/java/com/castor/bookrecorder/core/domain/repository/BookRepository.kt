@@ -11,6 +11,5 @@ interface BookRepository {
 
     suspend fun deleteBookById(id: String)
 
-    suspend fun syncBooks()
 
 }

@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 
 sealed interface BookDetailEvent {
-    data class SearchCharactersByBook(val id: Int) : BookDetailEvent
+    data class SearchCharactersByBook(val id: String) : BookDetailEvent
     data class AddCharacter(val character: Character) : BookDetailEvent
     data class DeleteCharacter(val id: Int) : BookDetailEvent
 }
@@ -36,10 +36,7 @@ class BookDetailViewModel @Inject constructor(
     fun listener(event: BookDetailEvent){
         when(event){
             is BookDetailEvent.SearchCharactersByBook -> {
-                /*
                 searchCharactersByBook(event.id)
-
-                 */
             }
 
             is BookDetailEvent.AddCharacter -> {
@@ -54,12 +51,11 @@ class BookDetailViewModel @Inject constructor(
 
     private fun searchCharactersByBook(id: String){
         viewModelScope.launch {
-            /*
+
             getCharactersByBookIdUseCase(id).collectLatest { characters ->
                 _charactersList.update { characters }
             }
 
-             */
         }
     }
 

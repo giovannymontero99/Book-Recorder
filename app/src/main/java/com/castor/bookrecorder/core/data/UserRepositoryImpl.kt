@@ -13,12 +13,12 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val userRemoteService: UserService,
+    private val userService: UserService,
     private val firebaseFirestore: FirebaseFirestore
 ): UserRepository {
     override fun addUser(user: User): Flow<Boolean> = flow{
 
-        val userRef = userRemoteService.getUserRef(user.id)
+        val userRef = userService.getUserRef(user.id)
 
         val userMap = hashMapOf(
             "name" to user.name,
@@ -47,7 +47,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override fun getCurrentUserId(): String? {
-        return userRemoteService.getCurrentUserId()
+        return userService.getCurrentUserId()
     }
 }
 

@@ -55,7 +55,7 @@ import com.google.firebase.auth.auth
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    onNavigateToBookDetail: (Int, String) -> Unit,
+    onNavigateToBookDetail: (String, String) -> Unit,
     onNavigateToAddBook: () -> Unit,
     onNavigateToEditBook: (String) -> Unit,
     onNavigateToAccount: () -> Unit
@@ -63,6 +63,8 @@ fun HomeScreen(
     val booksList by viewModel.booksList.collectAsState()
     val onClick = viewModel::onClick
     val auth = Firebase.auth
+
+    val navigationState by viewModel.navigationState.collectAsState()
 
     Scaffold(
         floatingActionButton = {
@@ -109,10 +111,7 @@ fun HomeScreen(
                         onClick(HomeEvent.DeleteBook(item.id))
                     },
                     onClick = {
-                        /*
                         onNavigateToBookDetail(item.id, item.title)
-
-                         */
                     },
                     onEdit = {
                         onNavigateToEditBook(item.id)
