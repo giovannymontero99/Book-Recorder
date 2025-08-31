@@ -8,5 +8,5 @@ interface CharacterRepository {
 
     suspend fun upsertCharacter(character: Character)
 
-    suspend fun deleteCharacterById(id: Int)
+    suspend fun deleteCharacterById(idCharacter: Int, bookId: String)
 }

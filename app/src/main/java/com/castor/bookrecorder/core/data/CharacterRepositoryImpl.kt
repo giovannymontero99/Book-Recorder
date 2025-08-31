@@ -41,8 +41,9 @@ class CharacterRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteCharacterById(id: Int) {
-        characterDao.delete(id)
+    override suspend fun deleteCharacterById(idCharacter: Int, bookId: String) {
+        characterDao.delete(idCharacter)
+        characterService.deleteCharacter(idCharacter, bookId)
     }
 
 }

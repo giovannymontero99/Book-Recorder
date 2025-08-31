@@ -19,7 +19,10 @@ import javax.inject.Inject
 sealed interface BookDetailEvent {
     data class SearchCharactersByBook(val id: String) : BookDetailEvent
     data class AddCharacter(val character: Character) : BookDetailEvent
-    data class DeleteCharacter(val id: Int) : BookDetailEvent
+    data class DeleteCharacter(
+        val idCharacter: Int,
+        val idBook: String
+    ) : BookDetailEvent
 }
 
 
@@ -44,7 +47,7 @@ class BookDetailViewModel @Inject constructor(
             }
 
             is BookDetailEvent.DeleteCharacter -> {
-                deleteCharacter(event.id)
+                deleteCharacter(event.idCharacter, event.idBook)
             }
         }
     }
@@ -65,9 +68,15 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
-    private fun deleteCharacter(id: Int){
+    private fun deleteCharacter(
+        idCharacter: Int,
+        idBook: String
+    ){
         viewModelScope.launch {
-            deleteCharacterByIdUseCase(id)
+            deleteCharacterByIdUseCase(
+                idCharacter,
+                idBook
+            )
         }
     }
 }
