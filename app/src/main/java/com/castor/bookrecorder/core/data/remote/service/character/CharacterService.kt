@@ -6,4 +6,5 @@ interface CharacterService {
 
     suspend fun insertCharacter(character: Character): Void
     suspend fun deleteCharacter(idCharacter: Int, idBook: String)
+    suspend fun updateCharacter(character: Character, idBook: String)
 }

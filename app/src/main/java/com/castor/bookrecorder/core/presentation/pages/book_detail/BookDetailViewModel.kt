@@ -18,7 +18,10 @@ import javax.inject.Inject
 
 sealed interface BookDetailEvent {
     data class SearchCharactersByBook(val id: String) : BookDetailEvent
-    data class AddCharacter(val character: Character) : BookDetailEvent
+    data class AddCharacter(
+        val character: Character,
+        val idBook: String
+    ) : BookDetailEvent
     data class DeleteCharacter(
         val idCharacter: Int,
         val idBook: String
@@ -43,7 +46,7 @@ class BookDetailViewModel @Inject constructor(
             }
 
             is BookDetailEvent.AddCharacter -> {
-                addCharacter(event.character)
+                addCharacter(event.character, event.idBook)
             }
 
             is BookDetailEvent.DeleteCharacter -> {
@@ -62,9 +65,12 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
-    private fun addCharacter(character: Character){
+    private fun addCharacter(
+        character: Character,
+        idBook: String
+    ){
         viewModelScope.launch {
-            upsertCharacterUseCase(character)
+            upsertCharacterUseCase(character, idBook)
         }
     }
 

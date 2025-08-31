@@ -172,7 +172,8 @@ fun BookDetailScreen(
                                     name = characterName,
                                     description = characterDescription,
                                     firstAppearancePage = characterFirstAppearancePage.toIntOrNull()
-                                )
+                                ),
+                                id!!
                             ))
 
                             showCharacterForm = false
@@ -195,9 +196,7 @@ fun BookDetailScreen(
                 CharacterCard(
                     character = it,
                     onDeleteCharacter = { character ->
-
                         listener(BookDetailEvent.DeleteCharacter(character.id, id!!))
-
                     },
                     onEditCharacter = { character ->
                         characterId = character.id

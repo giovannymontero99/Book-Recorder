@@ -19,9 +19,10 @@ class CharacterRepositoryImpl @Inject constructor(
         return characterEntities.map { list -> list.map { entity -> entity.toModel() } }
     }
 
-    override suspend fun upsertCharacter(character: Character) {
+    override suspend fun upsertCharacter(character: Character, bookId: String) {
         if (character.id != 0) {
             characterDao.upsert(character.toEntity())
+            characterService.updateCharacter(character, bookId)
         } else {
 
             try {

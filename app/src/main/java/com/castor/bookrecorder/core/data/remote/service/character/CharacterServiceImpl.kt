@@ -45,4 +45,33 @@ class CharacterServiceImpl @Inject constructor(
             e.printStackTrace()
         }
     }
+
+    override suspend fun updateCharacter(character: Character, idBook: String) {
+        val characterMap = mapOf(
+            "description" to character.description,
+            "firstAppearancePage" to character.firstAppearancePage,
+            "id" to character.id,
+            "name" to character.name,
+        )
+
+        val characterRef = firebaseFirestore
+            .collection("books")
+            .document(idBook)
+
+        firebaseFirestore.runTransaction { transaction ->
+            val bookSnapshot = transaction.get(characterRef)
+            val bookDto = bookSnapshot.toObject(BookDto::class.java)
+            val characters = bookDto?.characters
+            if (characters != null) {
+                val newCharacters = characters.map {
+                    if (it.id == character.id) {
+                        characterMap
+                    } else {
+                        it
+                    }
+                }
+                transaction.update(characterRef, "characters", newCharacters)
+            }
+        }.await()
+    }
 }

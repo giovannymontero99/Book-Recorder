@@ -8,7 +8,7 @@ import javax.inject.Inject
 class UpsertCharacterUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    suspend operator fun invoke(character: Character) {
-        characterRepository.upsertCharacter(character)
+    suspend operator fun invoke(character: Character, idBook: String) {
+        characterRepository.upsertCharacter(character, idBook)
     }
 }
