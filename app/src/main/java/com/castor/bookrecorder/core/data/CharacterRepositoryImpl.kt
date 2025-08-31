@@ -32,6 +32,7 @@ class CharacterRepositoryImpl @Inject constructor(
                     name = character.name,
                     bookId = character.bookId,
                     description = character.description,
+                    firstAppearancePage = character.firstAppearancePage
                 )
                 characterService.insertCharacter(characterForService)
             }catch (e: Exception){

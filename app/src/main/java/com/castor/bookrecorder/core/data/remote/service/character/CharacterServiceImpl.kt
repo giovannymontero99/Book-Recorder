@@ -10,12 +10,12 @@ class CharacterServiceImpl @Inject constructor(
     private val firebaseFirestore: FirebaseFirestore
 ): CharacterService {
     override suspend fun insertCharacter(character: Character): Void {
-        val characterMap: Map<String, Any> = mapOf(
+        val characterMap = mapOf(
             "description" to character.description,
-            "firstAppearance" to character.firstAppearancePage,
+            "firstAppearancePage" to character.firstAppearancePage,
             "id" to character.id,
             "name" to character.name,
-        ) as Map<String, Any>
+        )
 
         val characterRef = firebaseFirestore
             .collection("books")
