@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.castor.bookrecorder" />
+                  <option name="mobileSdkAppId" value="1:529568803872:android:e3543e9ba5672a9f746045" />
+                  <option name="projectId" value="bookrecorder-8af7d" />
+                  <option name="projectNumber" value="529568803872" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

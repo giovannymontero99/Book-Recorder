@@ -33,12 +33,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.R
+import com.castor.bookrecorder.core.presentation.state.NavigationState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBookScreen(
     modifier: Modifier = Modifier,
-    id: Int? = null,
+    id: String? = null,
     viewModel: AddBookViewModel = hiltViewModel(),
     onNavigateToHome: () -> Unit = {}
 ) {
@@ -47,9 +48,17 @@ fun AddBookScreen(
     val state by viewModel.state.collectAsState()
     val handleEvent = viewModel::handleEvent
 
+    val navigationState by viewModel.navigationState.collectAsState()
+
     LaunchedEffect(id) {
         if(id != null){
             viewModel.getBookById(id)
+        }
+    }
+
+    LaunchedEffect(navigationState) {
+        if(navigationState is NavigationState.NavigateToHome) {
+            onNavigateToHome()
         }
     }
 
@@ -122,8 +131,9 @@ fun AddBookScreen(
 
             Button(
                 onClick = {
-                    handleEvent(AddBookUiState.SaveBook)
-                    onNavigateToHome()
+                    handleEvent(
+                        AddBookUiState.SaveBook
+                    )
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

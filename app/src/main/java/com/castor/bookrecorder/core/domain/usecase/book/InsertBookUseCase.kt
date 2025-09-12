@@ -5,9 +5,10 @@ import com.castor.bookrecorder.core.domain.repository.BookRepository
 import javax.inject.Inject
 
 class InsertBookUseCase @Inject constructor(
-    private val bookRepository: BookRepository
+    private val bookRepository: BookRepository,
 ){
     suspend operator fun invoke(book: Book){
+        // Insert the book into the local database
         bookRepository.insertBook(book)
     }
 }

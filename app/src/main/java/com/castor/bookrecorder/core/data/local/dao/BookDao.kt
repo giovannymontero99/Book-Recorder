@@ -1,7 +1,10 @@
 package com.castor.bookrecorder.core.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import com.castor.bookrecorder.core.data.local.entity.BookEntity
 import kotlinx.coroutines.flow.Flow
@@ -15,9 +18,32 @@ interface BookDao {
     fun getAllBooks(): Flow<List<BookEntity>>
 
     @Query("DELETE FROM books WHERE id = :id")
-    suspend fun deleteBookById(id: Int)
+    suspend fun deleteBookById(id: String)
 
     @Query("SELECT * FROM books WHERE id = :id")
-    suspend fun getBookById(id: Int): BookEntity
+    suspend fun getBookById(id: String): BookEntity
+
+    @Query("DELETE FROM books")
+    suspend fun deleteAllBooks()
+
+    @Query("SELECT * FROM books WHERE userID = :userID")
+    fun getBooksByUserID(userID: String): Flow<List<BookEntity>>
+
+    @Query("SELECT * FROM books WHERE id IN (:ids)")
+    fun getBooksByIds(ids: List<String>): Flow<List<BookEntity>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertBooks(books: List<BookEntity>)
+
+    @Query("DELETE FROM books WHERE id NOT IN (:ids)")
+    suspend fun deleteBooksNotInIds(ids: List<String>)
+
+
+    @Transaction
+    suspend fun cleanAndUpsertBook(bookEntityList: List<BookEntity> ){
+        val existingBooks: List<String> = bookEntityList.map { it.id } // Get existing books by their IDs
+        deleteBooksNotInIds(existingBooks) // Delete books that are not in the new list
+        insertBooks(bookEntityList)
+    }
 
 }

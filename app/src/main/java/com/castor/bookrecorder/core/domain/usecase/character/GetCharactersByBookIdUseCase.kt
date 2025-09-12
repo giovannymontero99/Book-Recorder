@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetCharactersByBookIdUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    operator fun invoke(bookId: Int) = characterRepository.getCharacterByBookId(bookId)
+    operator fun invoke(bookId: String) = characterRepository.getCharacterByBookId(bookId)
 
 }

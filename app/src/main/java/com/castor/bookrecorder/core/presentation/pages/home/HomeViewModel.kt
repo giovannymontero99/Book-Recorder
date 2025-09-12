@@ -1,10 +1,12 @@
 package com.castor.bookrecorder.core.presentation.pages.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.DeleteBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.GetAllBooksUseCase
+import com.castor.bookrecorder.core.presentation.state.NavigationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +18,7 @@ import javax.inject.Inject
 
 
 sealed interface HomeEvent {
-    data class DeleteBook(val id: Int): HomeEvent
+    data class DeleteBook(val id: String): HomeEvent
 }
 
 
@@ -24,25 +26,26 @@ sealed interface HomeEvent {
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val deleteBookByIdUseCase: DeleteBookByIdUseCase
+    private val deleteBookByIdUseCase: DeleteBookByIdUseCase,
 ): ViewModel() {
 
+
+    private val _navigationState = MutableStateFlow<NavigationState?>(null)
+    val navigationState: StateFlow<NavigationState?> = _navigationState.asStateFlow()
 
     private val _booksList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
     val booksList: StateFlow<List<Book>> = _booksList.asStateFlow()
 
 
     init {
-        getAllBooks()
-    }
-
-    private fun getAllBooks(){
         viewModelScope.launch {
-            getAllBooksUseCase().collectLatest { books ->
-                _booksList.update { books }
+            getAllBooksUseCase().collectLatest { list ->
+                _booksList.update { list }
             }
+
         }
     }
+
 
     fun onClick(event: HomeEvent){
         when(event){
@@ -52,9 +55,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun removeBookById(id: Int){
+    private fun removeBookById(id: String){
         viewModelScope.launch {
-            deleteBookByIdUseCase(id)
+            try {
+                deleteBookByIdUseCase(id)
+            }catch (e: Exception){
+                Log.d("HomeViewModel", "removeBookById: ${e.message}")
+            }
         }
     }
 

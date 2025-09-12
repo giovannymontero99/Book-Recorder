@@ -1,9 +1,11 @@
 package com.castor.bookrecorder.core.di.bind
 
-import com.castor.bookrecorder.core.data.local.service.book.BookService
-import com.castor.bookrecorder.core.data.local.service.book.BookServiceImpl
-import com.castor.bookrecorder.core.data.local.service.character.CharacterService
-import com.castor.bookrecorder.core.data.local.service.character.CharacterServiceImpl
+import com.castor.bookrecorder.core.data.remote.service.book.BookService
+import com.castor.bookrecorder.core.data.remote.service.book.BookServiceImpl
+import com.castor.bookrecorder.core.data.remote.service.character.CharacterService
+import com.castor.bookrecorder.core.data.remote.service.character.CharacterServiceImpl
+import com.castor.bookrecorder.core.data.remote.service.user.UserService
+import com.castor.bookrecorder.core.data.remote.service.user.UserServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,10 +19,13 @@ abstract class ServiceModule {
 
     @Singleton
     @Binds
-    abstract fun bindBookService(bookServiceImpl: BookServiceImpl): BookService
+    abstract fun bindBookService(bookRemoteServiceImpl: BookServiceImpl): BookService
 
     @Singleton
     @Binds
-    abstract fun bindCharacterService(characterServiceImpl: CharacterServiceImpl): CharacterService
+    abstract fun bindUserRemoteService(userRemoteServiceImpl: UserServiceImpl): UserService
 
+    @Singleton
+    @Binds
+    abstract fun bindCharacterService(characterRemoteServiceImpl: CharacterServiceImpl): CharacterService
 }

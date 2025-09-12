@@ -26,9 +26,6 @@ fun NavigationWrapper(
     viewModel: NavigationWrapperViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
-
-
-
     val isLoggedState by viewModel.isLoggedState.collectAsState()
 
     isLoggedState?.let { isLogged ->

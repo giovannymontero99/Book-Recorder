@@ -11,13 +11,13 @@ object AddBookRoute
 
 @Serializable
 data class BookDetailRoute(
-    val id: Int,
+    val id: String,
     val title: String
 )
 
 @Serializable
 data class EditBookRoute(
-    val id: Int
+    val id: String
 )
 
 @Serializable

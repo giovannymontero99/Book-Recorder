@@ -5,10 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface BookRepository {
     suspend fun insertBook(book: Book)
-    suspend fun getBookById(id: Int): Book
+    suspend fun getBookById(id: String): Book
 
     fun getAllBooks(): Flow<List<Book>>
 
-    suspend fun deleteBookById(id: Int)
+    suspend fun deleteBookById(id: String)
+
 
 }

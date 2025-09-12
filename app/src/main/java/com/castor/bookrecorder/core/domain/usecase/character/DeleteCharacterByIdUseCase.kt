@@ -6,7 +6,7 @@ import javax.inject.Inject
 class DeleteCharacterByIdUseCase @Inject constructor(
     private val characterRepository: CharacterRepository
 ) {
-    suspend operator fun invoke(id: Int) {
-        characterRepository.deleteCharacterById(id)
+    suspend operator fun invoke(idCharacter: Int, idBook: String) {
+        characterRepository.deleteCharacterById(idCharacter, idBook)
     }
 }

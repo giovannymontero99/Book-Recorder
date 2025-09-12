@@ -1,6 +1,7 @@
 package com.castor.bookrecorder.core.presentation.pages.account
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,11 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil3.compose.AsyncImage
+import com.castor.bookrecorder.R
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 
@@ -52,15 +55,27 @@ fun AccountScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            AsyncImage(
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant),
-                model = auth.currentUser?.photoUrl,
-                contentDescription = "User profile picture",
-                contentScale = ContentScale.Crop
-            )
+            if(auth.currentUser?.photoUrl == null){
+                Image(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    painter = painterResource(R.drawable.userphoto_desnt_exist),
+                    contentDescription = "User profile picture",
+                    contentScale = ContentScale.Crop
+                )
+            }else{
+                AsyncImage(
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    model = auth.currentUser?.photoUrl,
+                    contentDescription = "User profile picture",
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 
