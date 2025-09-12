@@ -1,5 +1,6 @@
 package com.castor.bookrecorder.core.presentation.pages.book_detail
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
@@ -77,6 +79,9 @@ fun BookDetailScreen(
     // Allow see the modal bottom sheet
     var showModalBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+
+    // Handle alert to delete character
+    var showDeleteAlert by remember { mutableStateOf(false) }
 
     LaunchedEffect(id) {
         if (id != null) listener(BookDetailEvent.SearchCharactersByBook(id))
@@ -194,6 +199,89 @@ fun BookDetailScreen(
             }
         }
 
+        if(showModalBottomSheet){
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showModalBottomSheet = false
+                },
+                sheetState = sheetState,
+                containerColor = MaterialTheme.colorScheme.background
+            ) {
+                ListItem(
+                    modifier = Modifier
+                        .clickable{
+                            showDeleteAlert = true
+                            showModalBottomSheet = false
+                        },
+                    headlineContent = {
+                        Text(stringResource(R.string.delete))
+                    },
+                    leadingContent = {
+                        Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        headlineColor = MaterialTheme.colorScheme.onBackground,
+                        leadingIconColor = MaterialTheme.colorScheme.onBackground
+                    )
+                )
+
+                ListItem(
+                    modifier = Modifier
+                        .clickable{
+                            showCharacterForm = true
+                            showModalBottomSheet = false
+                        },
+                    headlineContent = {
+                        Text(text = stringResource(R.string.edit))
+                    },
+                    leadingContent = {
+                        Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        headlineColor = MaterialTheme.colorScheme.onBackground,
+                        leadingIconColor = MaterialTheme.colorScheme.onBackground
+                    )
+                )
+            }
+        }
+
+        if(showDeleteAlert){
+            AlertDialog(
+                onDismissRequest = { showDeleteAlert = false },
+                title = { Text(stringResource(R.string.delete_character)) },
+                text = { Text(stringResource(R.string.are_you_sure_you_want_to_delete_this_character)) },
+                confirmButton = {
+                    Button(onClick = {
+                        listener(BookDetailEvent.DeleteCharacter(characterId, id!!))
+                        showDeleteAlert = false
+                    }) {
+                        Text(stringResource(R.string.delete))
+                    }
+                },
+                dismissButton = {
+                    Button(
+                        onClick = {
+                            showDeleteAlert = false
+                        },
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.background,
+                            contentColor = MaterialTheme.colorScheme.onBackground
+                        ),
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
+                    ) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                },
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.onBackground,
+                textContentColor = MaterialTheme.colorScheme.onBackground,
+            )
+        }
+
+
+
         LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
@@ -213,53 +301,7 @@ fun BookDetailScreen(
                     }
                 )
 
-                if(showModalBottomSheet){
-                    ModalBottomSheet(
-                        onDismissRequest = {
-                            showModalBottomSheet = false
-                        },
-                        sheetState = sheetState,
-                        containerColor = MaterialTheme.colorScheme.background
-                    ) {
-                        ListItem(
-                            modifier = Modifier
-                                .clickable{
-                                    listener(BookDetailEvent.DeleteCharacter(characterId, id!!))
-                                    showModalBottomSheet = false
-                                },
-                            headlineContent = {
-                                Text(text = "Delete")
-                            },
-                            leadingContent = {
-                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
-                            },
-                            colors = ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                headlineColor = MaterialTheme.colorScheme.onBackground,
-                                leadingIconColor = MaterialTheme.colorScheme.onBackground
-                            )
-                        )
 
-                        ListItem(
-                            modifier = Modifier
-                                .clickable{
-                                    showCharacterForm = true
-                                    showModalBottomSheet = false
-                                },
-                            headlineContent = {
-                                Text(text = "Edit")
-                            },
-                            leadingContent = {
-                                Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
-                            },
-                            colors = ListItemDefaults.colors(
-                                containerColor = MaterialTheme.colorScheme.background,
-                                headlineColor = MaterialTheme.colorScheme.onBackground,
-                                leadingIconColor = MaterialTheme.colorScheme.onBackground
-                            )
-                        )
-                    }
-                }
             }
         }
     }
