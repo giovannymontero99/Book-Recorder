@@ -1,7 +1,6 @@
 package com.castor.bookrecorder.core.presentation.pages.book_detail
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,9 +34,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -68,6 +73,10 @@ fun BookDetailScreen(
     var characterDescription by remember { mutableStateOf("") }
     var characterFirstAppearancePage by remember { mutableStateOf("") }
     var characterId by remember { mutableIntStateOf(0) }
+
+    // Allow see the modal bottom sheet
+    var showModalBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
 
     LaunchedEffect(id) {
         if (id != null) listener(BookDetailEvent.SearchCharactersByBook(id))
@@ -195,17 +204,62 @@ fun BookDetailScreen(
 
                 CharacterCard(
                     character = it,
-                    onDeleteCharacter = { character ->
-                        listener(BookDetailEvent.DeleteCharacter(character.id, id!!))
-                    },
-                    onEditCharacter = { character ->
+                    onShowActionsSheet = { character ->
+                        showModalBottomSheet = true
                         characterId = character.id
                         characterName = character.name
                         characterDescription = character.description ?: ""
                         characterFirstAppearancePage = character.firstAppearancePage?.toString() ?: ""
-                        showCharacterForm = true
                     }
                 )
+
+                if(showModalBottomSheet){
+                    ModalBottomSheet(
+                        onDismissRequest = {
+                            showModalBottomSheet = false
+                        },
+                        sheetState = sheetState,
+                        containerColor = MaterialTheme.colorScheme.background
+                    ) {
+                        ListItem(
+                            modifier = Modifier
+                                .clickable{
+                                    listener(BookDetailEvent.DeleteCharacter(characterId, id!!))
+                                    showModalBottomSheet = false
+                                },
+                            headlineContent = {
+                                Text(text = "Delete")
+                            },
+                            leadingContent = {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                headlineColor = MaterialTheme.colorScheme.onBackground,
+                                leadingIconColor = MaterialTheme.colorScheme.onBackground
+                            )
+                        )
+
+                        ListItem(
+                            modifier = Modifier
+                                .clickable{
+                                    showCharacterForm = true
+                                    showModalBottomSheet = false
+                                },
+                            headlineContent = {
+                                Text(text = "Edit")
+                            },
+                            leadingContent = {
+                                Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                            },
+                            colors = ListItemDefaults.colors(
+                                containerColor = MaterialTheme.colorScheme.background,
+                                headlineColor = MaterialTheme.colorScheme.onBackground,
+                                leadingIconColor = MaterialTheme.colorScheme.onBackground
+                            )
+                        )
+                    }
+                }
             }
         }
     }
@@ -215,28 +269,21 @@ fun BookDetailScreen(
 fun CharacterCard(
     modifier: Modifier = Modifier,
     character: Character,
-    onDeleteCharacter: (Character) -> Unit,
-    onEditCharacter: (Character) -> Unit
+    onShowActionsSheet: (Character) -> Unit
 ) {
     CardBorder(
         modifier = modifier
             .padding(vertical = 4.dp)
             .fillMaxWidth()
-            .clickable{ onEditCharacter(character) }
+            .clickable{ onShowActionsSheet(character) }
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(character.name, style = MaterialTheme.typography.titleMedium)
-                IconButton(
-                    onClick = { onDeleteCharacter(character)  }//listener(BookDetailEvent.DeleteCharacter(it.id)) }
-                ) {
-                    Icon(imageVector = Icons.Filled.Close, contentDescription = "Delete character")
-                }
             }
 
             character.description?.let { description ->
