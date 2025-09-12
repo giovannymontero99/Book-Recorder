@@ -2,6 +2,7 @@ package com.castor.bookrecorder.core.presentation.pages.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -41,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -75,15 +77,28 @@ fun HomeScreen(
         topBar = {
             TopAppBar(
                 actions = {
-                    AsyncImage(
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .clickable{ onNavigateToAccount() },
-                        model =  auth.currentUser?.photoUrl,
-                        contentDescription = "User profile picture"
-                    )
+                    if(auth.currentUser?.photoUrl == null){
+                        Image(
+                            painter = painterResource(R.drawable.userphoto_desnt_exist),
+                            contentDescription = "User profile picture",
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .clickable{ onNavigateToAccount() }
+                        )
+                    }else{
+                        AsyncImage(
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .clickable{ onNavigateToAccount() },
+                            model =  auth.currentUser?.photoUrl,
+                            contentDescription = "User profile picture"
+                        )
+                    }
+
                 },
 
                 title = {
