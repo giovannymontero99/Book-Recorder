@@ -155,7 +155,7 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                 }else{
-                    onErrorCode(R.string.empty_credentials)
+                    onErrorCode(R.string.email_and_password_required)
                 }
             }
         }
@@ -185,7 +185,7 @@ class LoginViewModel @Inject constructor(
                         }
                     }
                 }else{
-                    onErrorCode(R.string.empty_credentials)
+                    onErrorCode(R.string.email_and_password_required)
                 }
             }
             is LoginEvent.OnPasswordChange -> {

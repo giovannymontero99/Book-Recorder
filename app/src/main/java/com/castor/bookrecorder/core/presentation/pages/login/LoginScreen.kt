@@ -2,6 +2,7 @@ package com.castor.bookrecorder.core.presentation.pages.login
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,16 +17,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,11 +37,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.core.presentation.state.NavigationState
@@ -58,6 +63,7 @@ fun LoginScreen(
     val signUpCustomEmail = viewModel::signUpCustomEmail
     val signInCustomEmail = viewModel::signInCustomEmail
     val signInWithGoogle = viewModel::signInWithGoogle
+    var passwordVisible by remember { mutableStateOf(false) }
 
     var isSignUp by remember { mutableStateOf(false) }
 
@@ -93,49 +99,80 @@ fun LoginScreen(
                         .fillMaxWidth()
                 ) {
 
-                    if(isSignUp){
+                    Text(
+                        text = stringResource(if(isSignUp) R.string.sign_up else R.string.sign_in),
+                        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        fontWeight = MaterialTheme.typography.titleLarge.fontWeight
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Row {
                         Text(
-                            text = stringResource(R.string.signup),
-                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight
+                            text = stringResource(if(isSignUp) R.string.already_have_an_account else R.string.dont_have_an_account),
+                            fontSize = MaterialTheme.typography.titleSmall.fontSize
                         )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        OutlinedTextField(
+                        Text(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            value = loginState.email,
-                            onValueChange = { signUpCustomEmail(LoginEvent.OnEmailChange(it)){} },
-                            label = { Text(stringResource(R.string.email)) },
-                            singleLine = true
+                                .clickable{
+                                    isSignUp = !isSignUp
+                                },
+                            text = stringResource(if (isSignUp) R.string.sign_in else R.string.sign_up),
+                            fontSize = MaterialTheme.typography.titleSmall.fontSize,
+                            color = MaterialTheme.colorScheme.primary,
+                            fontWeight = MaterialTheme.typography.titleSmall.fontWeight
                         )
+                    }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            value = loginState.password,
-                            onValueChange = {
-                                signUpCustomEmail(LoginEvent.OnPasswordChange(it)){ }
-                            },
-                            label = { Text(stringResource(R.string.password)) },
-                            singleLine = true,
-                            visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                        )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        value = loginState.email,
+                        onValueChange = { signInCustomEmail(LoginEvent.OnEmailChange(it)){} },
+                        label = { Text(stringResource(R.string.email)) },
+                        singleLine = true
+                    )
 
-                        Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                        Button(
-                            modifier = Modifier
-                                .height(50.dp)
-                                .padding(horizontal = 16.dp)
-                                .fillMaxWidth(),
-                            onClick = {
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                        value = loginState.password,
+                        onValueChange = {
+                            signInCustomEmail(LoginEvent.OnPasswordChange(it)){ }
+                        },
+                        label = { Text(stringResource(R.string.password)) },
+                        trailingIcon = {
+                            val image = if (passwordVisible)
+                                Icons.Filled.Visibility
+                            else Icons.Filled.VisibilityOff
+
+                            IconButton(onClick = {passwordVisible = !passwordVisible}){
+                                Icon(imageVector  = image, "Visibility icon")
+                            }
+                        },
+                        singleLine = true,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+                    )
+
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Button(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
+                        onClick = {
+                            if(isSignUp){
                                 signUpCustomEmail(LoginEvent.OnLogin){ errorCode ->
                                     Toast.makeText(
                                         context,
@@ -143,82 +180,7 @@ fun LoginScreen(
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
-                            },
-                            colors = ButtonDefaults.textButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            ),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Text(text = stringResource(R.string.signup), fontSize = MaterialTheme.typography.titleMedium.fontSize)
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                    }else{
-
-                        Text(
-                            text = stringResource(R.string.sign_in),
-                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                            fontWeight = MaterialTheme.typography.titleLarge.fontWeight
-                        )
-
-                        Spacer(modifier = Modifier.height(8.dp))
-
-                        Row {
-                            Text(
-                                text = stringResource(R.string.new_user),
-                                fontSize = MaterialTheme.typography.titleSmall.fontSize
-                            )
-                            Text(
-                                modifier = Modifier
-                                    .clickable{
-                                        isSignUp = !isSignUp
-                                    },
-                                text = stringResource(R.string.signup),
-                                fontSize = MaterialTheme.typography.titleSmall.fontSize,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontWeight = MaterialTheme.typography.titleSmall.fontWeight
-                            )
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            value = loginState.email,
-                            onValueChange = { signInCustomEmail(LoginEvent.OnEmailChange(it)){} },
-                            label = { Text(stringResource(R.string.email)) },
-                            singleLine = true
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        OutlinedTextField(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 16.dp),
-                            value = loginState.password,
-                            onValueChange = {
-                                signInCustomEmail(LoginEvent.OnPasswordChange(it)){ }
-                            },
-                            label = { Text(stringResource(R.string.password)) },
-                            singleLine = true,
-                            visualTransformation = PasswordVisualTransformation(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                        )
-
-
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        Button(
-                            modifier = Modifier
-                                .height(50.dp)
-                                .padding(horizontal = 16.dp)
-                                .fillMaxWidth(),
-                            onClick = {
+                            }else{
                                 signInCustomEmail(LoginEvent.OnLogin){ errorCode ->
                                     Toast.makeText(
                                         context,
@@ -226,25 +188,20 @@ fun LoginScreen(
                                         Toast.LENGTH_LONG
                                     ).show()
                                 }
-                            },
-                            colors = ButtonDefaults.textButtonColors(
-                                containerColor = MaterialTheme.colorScheme.primary,
-                                contentColor = MaterialTheme.colorScheme.onPrimary
-                            ),
-                            shape = RoundedCornerShape(10.dp)
-                        ) {
-                            Text(text = stringResource(R.string.sign_in), fontSize = MaterialTheme.typography.titleMedium.fontSize)
-                        }
+                            }
 
-                        Spacer(modifier = Modifier.height(16.dp))
+
+                        },
+                        colors = ButtonDefaults.textButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(text = stringResource(if (isSignUp) R.string.sign_up else R.string.sign_in), fontSize = MaterialTheme.typography.titleMedium.fontSize)
                     }
 
-
-
-
                     Spacer(modifier = Modifier.height(16.dp))
-
-
 
                     Row(
                         modifier = Modifier
@@ -271,8 +228,6 @@ fun LoginScreen(
 
                     }
 
-
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     IconButton(
@@ -287,41 +242,7 @@ fun LoginScreen(
                             contentDescription = "Google Icon"
                         )
                     }
-
-
-
-
-
-
-
-
-
-                    /*
-                    TextButton(
-                        modifier = Modifier
-                            .height(50.dp)
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth(),
-                        onClick = {
-                            viewModel.signInWithGoogle(
-                                context
-                            )
-                        },
-                        colors = ButtonDefaults.textButtonColors(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary
-                        )
-                    ) {
-                        Text(text = "Continue with Google", fontSize = MaterialTheme.typography.titleMedium.fontSize)
-                    }
-
-                     */
-
                 }
-
-
-
-
             }
         }
     }
