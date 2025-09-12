@@ -20,4 +20,13 @@
     <string name="save_character">Guardar personaje</string>
     <string name="first_appearance">Aparición en página</string>
     <string name="default_web_client_id">529568803872-rf0tfqqg3oi4hf5mbm2mf2pa7a9bca0r.apps.googleusercontent.com</string>
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="signup">Registrar</string>
+    <string name="user_exist">Usuario ya existe</string>
+    <string name="weak_password">La contraseña es invalida</string>
+    <string name="invalid_email">Correo o contraseña invalidos</string>
+    <string name="empty_credentials">Email and password son requeridos</string>
+    <string name="new_user">"¿No tienes cuenta? "</string>
 </resources>

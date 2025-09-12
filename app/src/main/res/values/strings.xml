@@ -19,4 +19,13 @@
     <string name="save_character">Save Character</string>
     <string name="first_appearance">First appearance at page</string>
     <string name="default_web_client_id">529568803872-rf0tfqqg3oi4hf5mbm2mf2pa7a9bca0r.apps.googleusercontent.com</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="signup">Sign Up</string>
+    <string name="user_exist">User already exists</string>
+    <string name="weak_password">The given password is invalid</string>
+    <string name="invalid_email">Invalid email or password</string>
+    <string name="empty_credentials">Email and password are required</string>
+    <string name="new_user">"Already have an account? "</string>
 </resources>

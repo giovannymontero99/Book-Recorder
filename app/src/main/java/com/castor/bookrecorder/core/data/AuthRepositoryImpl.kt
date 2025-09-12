@@ -28,4 +28,28 @@ class AuthRepositoryImpl @Inject constructor(
     override fun signOut() {
         Firebase.auth.signOut()
     }
+
+    override suspend fun signUpWithEmailAndPassword(
+        email: String,
+        password: String
+    ): FirebaseUser {
+        return try {
+            val authResult = Firebase.auth.createUserWithEmailAndPassword(email, password).await()
+            authResult.user ?: throw Exception("Firebase user not found")
+        }catch (e: Exception){
+            throw e
+        }
+    }
+
+    override suspend fun signInWithEmailAndPassword(
+        email: String,
+        password: String
+    ): FirebaseUser {
+        return try {
+            val authResult = Firebase.auth.signInWithEmailAndPassword(email, password).await()
+            authResult.user ?: throw Exception("Firebase user not found")
+        }catch (e: Exception){
+            throw e
+        }
+    }
 }

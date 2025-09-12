@@ -91,4 +91,6 @@ dependencies {
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-firestore")
+    // Allow the user to sign in with a custom email and password
+    implementation("com.google.firebase:firebase-auth-ktx:23.2.1")
 }
