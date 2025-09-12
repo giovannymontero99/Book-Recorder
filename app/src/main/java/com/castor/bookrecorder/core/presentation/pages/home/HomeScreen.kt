@@ -191,11 +191,11 @@ fun BookTitleItem(
                                     textColor = MaterialTheme.colorScheme.background,
                                     leadingIconColor = MaterialTheme.colorScheme.background
                                 ),
-                                text = { Text("Delete") },
+                                text = { Text(stringResource(R.string.delete)) },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.Delete,
-                                        contentDescription = "Delete"
+                                        contentDescription = stringResource(R.string.delete)
                                     )
                                 },
                                 onClick = {
@@ -208,11 +208,11 @@ fun BookTitleItem(
                                     textColor = MaterialTheme.colorScheme.background,
                                     leadingIconColor = MaterialTheme.colorScheme.background
                                 ),
-                                text = { Text("Edit") },
+                                text = { Text(stringResource(R.string.edit)) },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Filled.Create,
-                                        contentDescription = "Edit"
+                                        contentDescription = stringResource(R.string.edit)
                                     )
                                 },
                                 onClick = {
