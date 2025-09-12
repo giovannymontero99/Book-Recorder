@@ -131,21 +131,28 @@ class LoginViewModel @Inject constructor(
                 if(loginState.value.email.isNotEmpty() && loginState.value.password.isNotEmpty()){
                     viewModelScope.launch {
                         try {
+                            // Show loading state
+                            _loginResult.update { AuthResult.Loading as AuthResult<Boolean> }
+
                             val userFirebase = signUpWithEmailAndPasswordUseCase(loginState.value.email, loginState.value.password)
                             handleUserCreationAndNavigation(userFirebase)
                         }catch (e: FirebaseAuthUserCollisionException){
                             e.printStackTrace()
                             onErrorCode(R.string.user_exist)
+                            _loginResult.update { null }
                         }catch (e: FirebaseAuthWeakPasswordException){
                             e.printStackTrace()
                             onErrorCode(R.string.weak_password)
+                            _loginResult.update { null }
                         }catch (e: FirebaseAuthInvalidCredentialsException){
                             e.printStackTrace()
                             onErrorCode(R.string.invalid_email)
+                            _loginResult.update { null }
                         }
                         catch (e: Exception){
                             e.printStackTrace()
                             Log.d("LoginViewModelError", "signInCustomEmail: $e")
+                            _loginResult.update { null }
                         }
                     }
                 }else{
@@ -167,11 +174,15 @@ class LoginViewModel @Inject constructor(
                 if(loginState.value.email.isNotEmpty() && loginState.value.password.isNotEmpty()){
                     viewModelScope.launch {
                         try {
+                            // Show loading state
+                            _loginResult.update { AuthResult.Loading as AuthResult<Boolean> }
+
                             val userFirebase = signInWithEmailAndPasswordUseCase(loginState.value.email, loginState.value.password)
                             handleUserCreationAndNavigation(userFirebase)
                         }catch (e: FirebaseAuthInvalidCredentialsException){
                             e.printStackTrace()
                             onErrorCode(R.string.invalid_email)
+                            _loginResult.update { null }
                         }
                     }
                 }else{

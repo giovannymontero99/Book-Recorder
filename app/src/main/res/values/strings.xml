@@ -28,4 +28,5 @@
     <string name="invalid_email">Invalid email or password</string>
     <string name="empty_credentials">Email and password are required</string>
     <string name="new_user">"Already have an account? "</string>
+    <string name="continue_with_google">Continue with Google</string>
 </resources>

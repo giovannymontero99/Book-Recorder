@@ -259,7 +259,7 @@ fun LoginScreen(
                         )
 
                         Text(
-                            text = "Continue with Google",
+                            text = stringResource(R.string.continue_with_google),
                             fontSize = MaterialTheme.typography.titleSmall.fontSize,
                         )
 

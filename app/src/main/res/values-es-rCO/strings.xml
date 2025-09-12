@@ -29,4 +29,5 @@
     <string name="invalid_email">Correo o contraseña invalidos</string>
     <string name="empty_credentials">Email and password son requeridos</string>
     <string name="new_user">"¿No tienes cuenta? "</string>
+    <string name="continue_with_google">Continua con Google</string>
 </resources>
