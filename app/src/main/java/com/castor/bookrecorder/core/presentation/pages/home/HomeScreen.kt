@@ -9,7 +9,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -19,20 +18,21 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -66,7 +66,92 @@ fun HomeScreen(
     val onClick = viewModel::onClick
     val auth = Firebase.auth
 
-    val navigationState by viewModel.navigationState.collectAsState()
+    // Modal bottom Sheet handler
+    val sheetState = rememberModalBottomSheetState()
+    var showModal by remember { mutableStateOf(false) }
+
+    // Delete alert handler
+    var showDeleteAlert by remember { mutableStateOf(false) }
+    var idItemSelected by remember { mutableStateOf<String?>(null) }
+
+    if(showDeleteAlert){
+        AlertDialog(
+            onDismissRequest = { showDeleteAlert = false },
+            title = { Text(stringResource(R.string.delete_character)) },
+            text = { Text(stringResource(R.string.are_you_sure_you_want_to_delete_this_character)) },
+            confirmButton = {
+                Button(onClick = {
+                    onClick(HomeEvent.DeleteBook(idItemSelected!!))
+                    showDeleteAlert = false
+                }) {
+                    Text(stringResource(R.string.delete))
+                }
+            },
+            dismissButton = {
+                Button(
+                    onClick = {
+                        showDeleteAlert = false
+                    },
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        contentColor = MaterialTheme.colorScheme.onBackground
+                    ),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground)
+                ) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.background,
+            titleContentColor = MaterialTheme.colorScheme.onBackground,
+            textContentColor = MaterialTheme.colorScheme.onBackground,
+        )
+    }
+
+    if(showModal){
+        ModalBottomSheet(
+            onDismissRequest = { showModal = false },
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.background
+        ) {
+            ListItem(
+                modifier = Modifier
+                    .clickable{
+                        showDeleteAlert = true
+                        showModal = false
+                    },
+                headlineContent = {
+                    Text(stringResource(R.string.delete))
+                },
+                leadingContent = {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    headlineColor = MaterialTheme.colorScheme.onBackground,
+                    leadingIconColor = MaterialTheme.colorScheme.onBackground
+                )
+            )
+
+            ListItem(
+                modifier = Modifier
+                    .clickable{
+                        onNavigateToEditBook(idItemSelected!!)
+                        showModal = false
+                    },
+                headlineContent = {
+                    Text(text = stringResource(R.string.edit))
+                },
+                leadingContent = {
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                },
+                colors = ListItemDefaults.colors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                    headlineColor = MaterialTheme.colorScheme.onBackground,
+                    leadingIconColor = MaterialTheme.colorScheme.onBackground
+                )
+            )
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -122,14 +207,12 @@ fun HomeScreen(
                 BookTitleItem(
                     title = item.title,
                     author = item.author,
-                    onDelete = {
-                        onClick(HomeEvent.DeleteBook(item.id))
-                    },
                     onClick = {
                         onNavigateToBookDetail(item.id, item.title)
                     },
-                    onEdit = {
-                        onNavigateToEditBook(item.id)
+                    onShowModalOptions = {
+                        showModal = true
+                        idItemSelected = item.id
                     }
                 )
             }
@@ -143,13 +226,11 @@ fun BookTitleItem(
     modifier: Modifier = Modifier,
     title: String,
     author: String = "",
-    onDelete: () -> Unit,
-    onEdit: () -> Unit = {},
     onClick: () -> Unit,
+    onShowModalOptions: () -> Unit
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
-    var itemSelected by remember { mutableStateOf(false) }
 
     CardBorder(
         modifier = modifier
@@ -159,78 +240,20 @@ fun BookTitleItem(
                 indication = null,
                 onClick = onClick,
                 onLongClick = {
-                    itemSelected = true
+                    onShowModalOptions()
                 }
             ),
-        border = if (itemSelected) BorderStroke(width = 3.dp, color = MaterialTheme.colorScheme.primary) else BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
     ){
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text(text = title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-
-                IconButton(onClick = { itemSelected = true }) {
-                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Delete book")
-                    if(itemSelected){
-                        DropdownMenu(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            expanded = true,
-                            onDismissRequest = { itemSelected = false }
-                        ) {
-                            DropdownMenuItem(
-                                colors = MenuDefaults.itemColors(
-                                    textColor = MaterialTheme.colorScheme.background,
-                                    leadingIconColor = MaterialTheme.colorScheme.background
-                                ),
-                                text = { Text(stringResource(R.string.delete)) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Delete,
-                                        contentDescription = stringResource(R.string.delete)
-                                    )
-                                },
-                                onClick = {
-                                    onDelete()
-                                    itemSelected = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                colors = MenuDefaults.itemColors(
-                                    textColor = MaterialTheme.colorScheme.background,
-                                    leadingIconColor = MaterialTheme.colorScheme.background
-                                ),
-                                text = { Text(stringResource(R.string.edit)) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Create,
-                                        contentDescription = stringResource(R.string.edit)
-                                    )
-                                },
-                                onClick = {
-                                    onEdit()
-                                    itemSelected = false
-                                }
-                            )
-
-                        }
-                    }
-                }
-            }
-
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
             Text(text = author, style = MaterialTheme.typography.bodyMedium)
         }
-
-
-
     }
 }
 

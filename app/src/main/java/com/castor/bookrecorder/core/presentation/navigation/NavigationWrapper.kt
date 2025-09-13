@@ -22,7 +22,7 @@ import com.castor.bookrecorder.core.presentation.pages.login.LoginScreen
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
 fun NavigationWrapper(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     viewModel: NavigationWrapperViewModel = hiltViewModel()
 ) {
     val navController = rememberNavController()
@@ -30,7 +30,7 @@ fun NavigationWrapper(
 
     isLoggedState?.let { isLogged ->
 
-        NavHost(navController = navController, startDestination = if(isLogged) HomeRoute else LoginRoute ){
+        NavHost(modifier = modifier, navController = navController, startDestination = if(isLogged) HomeRoute else LoginRoute ){
 
             composable<HomeRoute> {
                 HomeScreen(
@@ -116,8 +116,5 @@ fun NavigationWrapper(
                 )
             }
         }
-
     }
-
-
 }

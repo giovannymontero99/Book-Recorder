@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.model.Book
 import com.castor.bookrecorder.core.domain.usecase.book.DeleteBookByIdUseCase
 import com.castor.bookrecorder.core.domain.usecase.book.GetAllBooksUseCase
-import com.castor.bookrecorder.core.presentation.state.NavigationState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,10 +28,6 @@ class HomeViewModel @Inject constructor(
     private val deleteBookByIdUseCase: DeleteBookByIdUseCase,
 ): ViewModel() {
 
-
-    private val _navigationState = MutableStateFlow<NavigationState?>(null)
-    val navigationState: StateFlow<NavigationState?> = _navigationState.asStateFlow()
-
     private val _booksList: MutableStateFlow<List<Book>> = MutableStateFlow(emptyList())
     val booksList: StateFlow<List<Book>> = _booksList.asStateFlow()
 
@@ -45,7 +40,6 @@ class HomeViewModel @Inject constructor(
 
         }
     }
-
 
     fun onClick(event: HomeEvent){
         when(event){
@@ -64,5 +58,4 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
-
 }
