@@ -30,7 +30,7 @@ fun NavigationWrapper(
 
     isLoggedState?.let { isLogged ->
 
-        NavHost(modifier = modifier, navController = navController, startDestination = if(isLogged) HomeRoute else LoginRoute ){
+        NavHost(navController = navController, startDestination = if(isLogged) HomeRoute else LoginRoute ){
 
             composable<HomeRoute> {
                 HomeScreen(

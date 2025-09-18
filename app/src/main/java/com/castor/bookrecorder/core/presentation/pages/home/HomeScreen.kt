@@ -1,56 +1,73 @@
 package com.castor.bookrecorder.core.presentation.pages.home
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil3.compose.AsyncImage
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.castor.bookrecorder.R
-import com.castor.bookrecorder.core.presentation.component.CardBorder
+import com.castor.bookrecorder.core.presentation.navigation.BooksListRoute
+import com.castor.bookrecorder.core.presentation.navigation.HomeRoute
+import com.castor.bookrecorder.core.presentation.navigation.LoginRoute
+import com.castor.bookrecorder.core.presentation.navigation.TestRoute
+import com.castor.bookrecorder.core.presentation.pages.bookslist.BooksListScreen
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
+
+data class NavItem(
+    val label: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val route: Any
+)
+
+data class ItemNavigationMenu(
+    val label: String,
+    val icon: ImageVector
+)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,6 +83,18 @@ fun HomeScreen(
     val onClick = viewModel::onClick
     val auth = Firebase.auth
 
+    // App Bottom Bar handler
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+    val items = listOf(
+        NavItem(
+            "Home",
+            Icons.Filled.Home, Icons.Outlined.Home,
+            BooksListRoute
+        ),
+        NavItem("Favorites", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, TestRoute),
+        NavItem("Profile", Icons.Filled.Person, Icons.Outlined.Person, TestRoute)
+    )
+
     // Modal bottom Sheet handler
     val sheetState = rememberModalBottomSheetState()
     var showModal by remember { mutableStateOf(false) }
@@ -74,6 +103,13 @@ fun HomeScreen(
     var showDeleteAlert by remember { mutableStateOf(false) }
     var idItemSelected by remember { mutableStateOf<String?>(null) }
 
+
+
+
+    // Navigation State
+    val navController = rememberNavController()
+
+    /*
     if(showDeleteAlert){
         AlertDialog(
             onDismissRequest = { showDeleteAlert = false },
@@ -107,6 +143,9 @@ fun HomeScreen(
         )
     }
 
+     */
+
+    /*
     if(showModal){
         ModalBottomSheet(
             onDismissRequest = { showModal = false },
@@ -153,107 +192,209 @@ fun HomeScreen(
         }
     }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToAddBook() }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Book")
-            }
-        },
-        topBar = {
-            TopAppBar(
-                actions = {
-                    if(auth.currentUser?.photoUrl == null){
-                        Image(
-                            painter = painterResource(R.drawable.userphoto_desnt_exist),
-                            contentDescription = "User profile picture",
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .size(30.dp)
-                                .clip(CircleShape)
-                                .clickable{ onNavigateToAccount() }
-                        )
-                    }else{
-                        AsyncImage(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .size(30.dp)
-                                .clip(CircleShape)
-                                .clickable{ onNavigateToAccount() },
-                            model =  auth.currentUser?.photoUrl,
-                            contentDescription = "User profile picture"
-                        )
-                    }
+     */
 
-                },
+    // Navigation state
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-                title = {
-                    Text(text = stringResource(R.string.library), color = MaterialTheme.colorScheme.background)
+    val itemsNavigationMenu = listOf(
+        ItemNavigationMenu(
+            label = "Profile",
+            icon = Icons.Default.Person
+        ),
+        ItemNavigationMenu(
+            label = "Settings",
+            icon = Icons.Default.Settings
+        )
+    )
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(300.dp)
+            ) {
+                itemsNavigationMenu.forEachIndexed { index, menu ->
+                    NavigationDrawerItem(
+                        label = { Text(menu.label) },
+                        selected = false,
+                        onClick = {
+                        },
+                        modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding)
+                    )
                 }
-            )
-        },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
-
-        LazyColumn(
-            modifier = modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-
-            items(booksList){ item ->
-                BookTitleItem(
-                    title = item.title,
-                    author = item.author,
-                    onClick = {
-                        onNavigateToBookDetail(item.id, item.title)
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(items[selectedItemIndex].label, color = MaterialTheme.colorScheme.background)
                     },
-                    onShowModalOptions = {
-                        showModal = true
-                        idItemSelected = item.id
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = null, tint = MaterialTheme.colorScheme.background)
+                        }
                     }
                 )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFDFDFE3)
+                        ),
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                ){
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedItemIndex == index,
+                            onClick = {
+                                selectedItemIndex = index
+                                navController.navigate(item.route)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if (index == selectedItemIndex) {
+                                        item.selectedIcon
+                                    } else item.unselectedIcon,
+                                    contentDescription = item.label
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+        ){ innerPadding ->
+
+            NavHost(modifier = Modifier.padding(innerPadding),navController = navController, startDestination = BooksListRoute){
+                composable<BooksListRoute>{
+                    BooksListScreen(
+                        onMenuClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }
+                    )
+                }
+                composable<TestRoute> {
+                    Text("Test")
+                }
+            }
+
+        }
+
+        /*
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(onClick = { onNavigateToAddBook() }) {
+                    Icon(Icons.Filled.Add, contentDescription = "Add Book")
+                }
+            },
+            topBar = {
+                TopAppBar(
+                    actions = {
+                        if(auth.currentUser?.photoUrl == null){
+                            Image(
+                                painter = painterResource(R.drawable.userphoto_desnt_exist),
+                                contentDescription = "User profile picture",
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .size(30.dp)
+                                    .clip(CircleShape)
+                                    .clickable { onNavigateToAccount() }
+                            )
+                        }else{
+                            AsyncImage(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .size(30.dp)
+                                    .clip(CircleShape)
+                                    .clickable { onNavigateToAccount() },
+                                model =  auth.currentUser?.photoUrl,
+                                contentDescription = "User profile picture"
+                            )
+                        }
+                    },
+
+                    title = {
+                        Text(text = stringResource(R.string.library), color = MaterialTheme.colorScheme.background)
+                    },
+                    navigationIcon = {
+
+                        IconButton(onClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = null, tint = MaterialTheme.colorScheme.background)
+                        }
+                    }
+                )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFDFDFE3)
+                        ),
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground
+                ){
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedItemIndex == index,
+                            onClick = {
+                                selectedItemIndex = index
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if (index == selectedItemIndex) {
+                                        item.selectedIcon
+                                    } else item.unselectedIcon,
+                                    contentDescription = item.label
+                                )
+                            }
+                        )
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxSize()
+        ) { innerPadding ->
+            LazyColumn(
+                modifier = modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(booksList){ item ->
+                    BookTitleItem(
+                        title = item.title,
+                        author = item.author,
+                        onClick = {
+                            onNavigateToBookDetail(item.id, item.title)
+                        },
+                        onShowModalOptions = {
+                            showModal = true
+                            idItemSelected = item.id
+                        }
+                    )
+                }
             }
         }
-    }
-}
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Composable
-fun BookTitleItem(
-    modifier: Modifier = Modifier,
-    title: String,
-    author: String = "",
-    onClick: () -> Unit,
-    onShowModalOptions: () -> Unit
-) {
-
-    val interactionSource = remember { MutableInteractionSource() }
-
-    CardBorder(
-        modifier = modifier
-            .fillMaxWidth()
-            .combinedClickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onClick,
-                onLongClick = {
-                    onShowModalOptions()
-                }
-            ),
-    ){
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
-            Text(text = author, style = MaterialTheme.typography.bodyMedium)
-        }
+         */
     }
 }
 
