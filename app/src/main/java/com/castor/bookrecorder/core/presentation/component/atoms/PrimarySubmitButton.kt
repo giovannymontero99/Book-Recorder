@@ -1,16 +1,15 @@
-package com.castor.bookrecorder.core.presentation.component.molecules
+package com.castor.bookrecorder.core.presentation.component.atoms
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+
 
 @Composable
-fun SecondarySubmitButton(
+fun PrimarySubmitButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit
@@ -18,11 +17,10 @@ fun SecondarySubmitButton(
     Button(
         modifier = modifier,
         onClick = onClick,
+        content = content,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.background,
-            contentColor = MaterialTheme.colorScheme.onBackground
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
         ),
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.onBackground),
-        content = content
     )
 }

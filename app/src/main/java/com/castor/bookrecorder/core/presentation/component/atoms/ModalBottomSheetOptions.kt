@@ -1,4 +1,4 @@
-package com.castor.bookrecorder.core.presentation.component.organisms
+package com.castor.bookrecorder.core.presentation.component.atoms
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.material3.ExperimentalMaterial3Api

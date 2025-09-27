@@ -32,11 +32,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.R
 import com.castor.bookrecorder.core.presentation.component.CardBorder
-import com.castor.bookrecorder.core.presentation.component.molecules.ModalBottomSheetOptionsItem
-import com.castor.bookrecorder.core.presentation.component.molecules.PrimarySubmitButton
-import com.castor.bookrecorder.core.presentation.component.molecules.SecondarySubmitButton
-import com.castor.bookrecorder.core.presentation.component.organisms.ConfirmAlertDialog
-import com.castor.bookrecorder.core.presentation.component.organisms.ModalBottomSheetOptions
+import com.castor.bookrecorder.core.presentation.component.atoms.ModalBottomSheetOptionsItem
+import com.castor.bookrecorder.core.presentation.component.atoms.PrimarySubmitButton
+import com.castor.bookrecorder.core.presentation.component.atoms.SecondarySubmitButton
+import com.castor.bookrecorder.core.presentation.component.atoms.ConfirmAlertDialog
+import com.castor.bookrecorder.core.presentation.component.atoms.ModalBottomSheetOptions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -83,8 +83,8 @@ fun BooksListScreen(
                     Text(stringResource(R.string.cancel))
                 }
             },
-            title = stringResource(R.string.delete_character),
-            text = stringResource(R.string.are_you_sure_you_want_to_delete_this_character)
+            title = stringResource(R.string.delete),
+            text = stringResource(R.string.are_you_sure_you_want_to_delete_this_book)
         )
     }
 

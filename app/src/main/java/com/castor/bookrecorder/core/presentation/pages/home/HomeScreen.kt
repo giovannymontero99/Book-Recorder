@@ -1,5 +1,6 @@
 package com.castor.bookrecorder.core.presentation.pages.home
 
+import com.castor.bookrecorder.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,9 +18,10 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -76,12 +79,12 @@ fun HomeScreen(
     var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
     val items = listOf(
         NavItem(
-            "Home",
+            stringResource(R.string.home),
             Icons.Filled.Home, Icons.Outlined.Home,
             BooksListRoute
         ),
-        NavItem("Favorites", Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, TestRoute),
-        NavItem("Profile", Icons.Filled.Person, Icons.Outlined.Person, TestRoute)
+        NavItem(stringResource(R.string.favorites), Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, TestRoute),
+        NavItem(stringResource(R.string.memory_box), Icons.Filled.Search, Icons.Outlined.Search, TestRoute)
     )
 
     // Navigation State

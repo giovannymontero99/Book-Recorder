@@ -1,4 +1,4 @@
-package com.castor.bookrecorder.core.presentation.component.molecules
+package com.castor.bookrecorder.core.presentation.component.atoms
 
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.ListItem
