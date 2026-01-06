@@ -37,4 +37,8 @@
     <string name="cancel">Cancelar</string>
     <string name="edit">Editar</string>
     <string name="sync_data">Sincronizar datos</string>
+    <string name="are_you_sure_you_want_to_delete_this_book">¿Desea eliminar este libro?</string>
+    <string name="home">Inicio</string>
+    <string name="favorites">Favoritos</string>
+    <string name="memory_box">Caja de memoria</string>
 </resources>

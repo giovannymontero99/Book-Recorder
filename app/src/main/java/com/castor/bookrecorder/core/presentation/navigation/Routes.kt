@@ -25,3 +25,9 @@ object LoginRoute
 
 @Serializable
 object AccountRoute
+
+@Serializable
+object BooksListRoute
+
+@Serializable
+object TestRoute

@@ -36,4 +36,8 @@
     <string name="cancel">Cancel</string>
     <string name="edit">Edit</string>
     <string name="sync_data">Sync data</string>
+    <string name="are_you_sure_you_want_to_delete_this_book">Are you sure you want to delete this book</string>
+    <string name="home">Home</string>
+    <string name="favorites">Favorites</string>
+    <string name="memory_box">Memory Box</string>
 </resources>
