@@ -54,8 +54,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.castor.bookrecorder.core.presentation.navigation.BooksListRoute
-import com.castor.bookrecorder.core.presentation.navigation.TestRoute
+import com.castor.bookrecorder.core.presentation.navigation.FavoritesRoute
+import com.castor.bookrecorder.core.presentation.navigation.MemoryBoxRoute
 import com.castor.bookrecorder.core.presentation.pages.bookslist.BooksListScreen
+import com.castor.bookrecorder.core.presentation.pages.favorites.FavoritesScreen
 import kotlinx.coroutines.launch
 
 data class NavItem(
@@ -83,8 +85,10 @@ fun HomeScreen(
             Icons.Filled.Home, Icons.Outlined.Home,
             BooksListRoute
         ),
-        NavItem(stringResource(R.string.favorites), Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, TestRoute),
-        NavItem(stringResource(R.string.memory_box), Icons.Filled.Search, Icons.Outlined.Search, TestRoute)
+        NavItem(stringResource(R.string.favorites), Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, FavoritesRoute),
+        NavItem(stringResource(R.string.memory_box), Icons.Filled.Search, Icons.Outlined.Search,
+            MemoryBoxRoute
+        )
     )
 
     // Navigation State
@@ -210,7 +214,11 @@ fun HomeScreen(
                         onNavigateToBookDetail = onNavigateToBookDetail
                     )
                 }
-                composable<TestRoute> {
+                composable<FavoritesRoute> {
+                    FavoritesScreen()
+                }
+
+                composable<MemoryBoxRoute> {
 
                 }
             }

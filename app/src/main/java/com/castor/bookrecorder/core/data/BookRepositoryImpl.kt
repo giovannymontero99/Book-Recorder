@@ -58,4 +58,21 @@ class BookRepositoryImpl @Inject constructor(
             e.printStackTrace()
         }
     }
+
+    override suspend fun addToFavorite(bookID: String) {
+        try {
+            val bookEntity = bookDao.getBookById(bookID)
+            bookDao.updateBookFavoriteStatus(bookID, !bookEntity.isFavorite)
+            bookService.addToFavorite(bookID, !bookEntity.isFavorite)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun getFavoriteBooks(): Flow<List<Book>> {
+        return bookDao.getFavoriteBooks()
+            .map {
+                list -> list.map { entity -> entity.toBook() }
+            }
+    }
 }

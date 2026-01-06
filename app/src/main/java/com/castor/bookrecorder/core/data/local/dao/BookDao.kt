@@ -38,6 +38,11 @@ interface BookDao {
     @Query("DELETE FROM books WHERE id NOT IN (:ids)")
     suspend fun deleteBooksNotInIds(ids: List<String>)
 
+    @Query("UPDATE books SET isFavorite = :isFavorite WHERE id = :id")
+    suspend fun updateBookFavoriteStatus(id: String, isFavorite: Boolean)
+
+    @Query("SELECT * FROM books WHERE isFavorite = 1")
+    fun getFavoriteBooks(): Flow<List<BookEntity>>
 
     @Transaction
     suspend fun cleanAndUpsertBook(bookEntityList: List<BookEntity> ){

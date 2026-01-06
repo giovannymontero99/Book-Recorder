@@ -11,5 +11,8 @@ interface BookRepository {
 
     suspend fun deleteBookById(id: String)
 
+    suspend fun addToFavorite(bookID: String)
+
+    fun getFavoriteBooks(): Flow<List<Book>>
 
 }

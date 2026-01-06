@@ -43,7 +43,8 @@ class SyncRepositoryImpl @Inject constructor(
                         quotes = bookDto.quotes,
                         coverImageUri = null,
                         isFinished = document.getBoolean("isFinished") ?: false,
-                        userID = bookDto.userID
+                        userID = bookDto.userID,
+                        isFavorite = document.getBoolean("isFavorite") ?: false
                     )
                     listBookEntity.add(bookEntity)
                     for (character in bookDto.characters) {

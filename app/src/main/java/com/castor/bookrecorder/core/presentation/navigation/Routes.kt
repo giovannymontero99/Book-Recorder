@@ -30,4 +30,7 @@ object AccountRoute
 object BooksListRoute
 
 @Serializable
-object TestRoute
+object FavoritesRoute
+
+@Serializable
+object MemoryBoxRoute
