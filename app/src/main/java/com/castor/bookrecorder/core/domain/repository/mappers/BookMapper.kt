@@ -34,7 +34,8 @@ fun BookEntity.toBook(): Book = Book(
     summary = this.summary,
     quotes = this.quotes,
     coverImageUri = this.coverImageUri,
-    isFinished = this.isFinished
+    isFinished = this.isFinished,
+    isFavorite = this.isFavorite
 )
 
 fun BookDto.toBook(): Book = Book(

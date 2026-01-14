@@ -6,6 +6,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,8 +15,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -27,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -135,6 +140,10 @@ fun BooksListScreen(
                 onShowModalOptions = {
                     showModal = true
                     idItemSelected = item.id
+                },
+                isFavorite = item.isFavorite,
+                onFavoriteClick = {
+                    onEvent(BooksListEvent.OnAddToFavorite(item.id))
                 }
             )
         }
@@ -148,7 +157,9 @@ fun BookTitleItem(
     title: String,
     author: String = "",
     onClick: () -> Unit,
-    onShowModalOptions: () -> Unit
+    onShowModalOptions: () -> Unit,
+    isFavorite: Boolean = false,
+    onFavoriteClick: () -> Unit = {}
 ) {
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -172,6 +183,22 @@ fun BookTitleItem(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                val icon = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder
+                val iconColor = if (isFavorite) MaterialTheme.colorScheme.primary else Color.Gray
+                IconButton(
+                    onClick = {
+                        onFavoriteClick()
+                    }
+                ) {
+                    Icon(imageVector = icon, contentDescription = "Favorite", tint = iconColor)
+                }
+            }
             Text(text = title, style = MaterialTheme.typography.titleMedium)
             Text(text = author, style = MaterialTheme.typography.bodyMedium)
         }

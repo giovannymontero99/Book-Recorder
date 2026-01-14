@@ -16,7 +16,7 @@ import com.castor.bookrecorder.core.data.local.entity.CharacterEntity
         CharacterEntity::class
         // Agrega más entidades según sea necesario
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase: RoomDatabase() {

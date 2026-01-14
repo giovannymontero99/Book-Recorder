@@ -3,6 +3,7 @@ package com.castor.bookrecorder.core.di
 import android.content.Context
 import androidx.room.Room
 import com.castor.bookrecorder.core.data.local.database.AppDatabase
+import com.castor.bookrecorder.core.data.local.migrations.MIGRATION_1_2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +22,9 @@ object DatabaseModule {
             context,
             AppDatabase::class.java,
             "bookrecorde_db"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 
     @Provides
