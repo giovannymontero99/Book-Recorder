@@ -1,11 +1,8 @@
 package com.castor.bookrecorder.core.presentation.pages.login
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import androidx.credentials.CredentialManager
+import androidx.credentials.Credential
 import androidx.credentials.CustomCredential
-import androidx.credentials.GetCredentialRequest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.castor.bookrecorder.core.domain.usecase.auth.SignInWithCredentialUseCase
@@ -24,7 +21,6 @@ import com.castor.bookrecorder.R
 import com.castor.bookrecorder.core.domain.model.User
 import com.castor.bookrecorder.core.domain.usecase.auth.SignInWithEmailAndPasswordUseCase
 import com.castor.bookrecorder.core.domain.usecase.auth.SignUpWithEmailAndPasswordUseCase
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
@@ -67,51 +63,6 @@ class LoginViewModel @Inject constructor(
     private val _loginState = MutableStateFlow<LoginState>(LoginState())
     val loginState: StateFlow<LoginState> = _loginState.asStateFlow()
 
-    fun signInWithGoogle(
-        context: Context
-    ) {
-
-        viewModelScope.launch {
-            try {
-
-                // Show loading state
-                _loginResult.update { AuthResult.Loading as AuthResult<Boolean> }
-
-                // Create the Google Sign-In request
-                val googleIdOption = GetGoogleIdOption.Builder()
-                    .setFilterByAuthorizedAccounts(true)
-                    .setServerClientId(context.getString(R.string.default_web_client_id))
-                    .build()
-
-                val request = GetCredentialRequest.Builder()
-                    .addCredentialOption(googleIdOption)
-                    .build()
-
-                val result = CredentialManager.create(context).getCredential(context, request)
-
-                if(result.credential is CustomCredential && result.credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL){
-                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
-                    val idToken = googleIdTokenCredential.idToken
-                    handleUserCreationAndNavigation(signInWithCredentialUseCase(idToken))
-                }
-
-            }catch (e: Exception){
-                // Error occurred during sign-in
-                val message = e.message ?: "Unknown error"
-                // Show error message
-                Toast.makeText(
-                    context,
-                    message,
-                    Toast.LENGTH_LONG
-                ).show()
-                e.printStackTrace()
-                Log.e("LoginViewModel", "signInWithGoogle: $message")
-
-                // Update the login result
-                _loginResult.update { null }
-            }
-        }
-    }
 
     // Sign up with email and password
     fun signUpCustomEmail(
@@ -212,5 +163,27 @@ class LoginViewModel @Inject constructor(
                 _navigationState.update { NavigationState.NavigateToHome }
             }
         }
+    }
+
+     fun onSignInWithGoogle(credential: Credential){
+         viewModelScope.launch {
+             try {
+                 _loginResult.update { AuthResult.Loading as AuthResult<Boolean> }
+
+                 if(credential is CustomCredential && credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                     val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                     val idToken = googleIdTokenCredential.idToken
+                     handleUserCreationAndNavigation(signInWithCredentialUseCase(idToken))
+                 }
+             } catch (e: Exception){
+                 // Error occurred during sign-in
+                 val message = e.message ?: "Unknown error"
+                 // Show error message
+                 e.printStackTrace()
+                 Log.e("LoginViewModel", "signInWithGoogle: $message")
+                 // Update the login result
+                 _loginResult.update { null }
+             }
+         }
     }
 }
