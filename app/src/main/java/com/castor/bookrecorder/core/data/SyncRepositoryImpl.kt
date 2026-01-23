@@ -7,11 +7,7 @@ import com.castor.bookrecorder.core.data.local.entity.CharacterEntity
 import com.castor.bookrecorder.core.data.remote.dto.BookDto
 import com.castor.bookrecorder.core.data.remote.service.book.BookService
 import com.castor.bookrecorder.core.data.remote.service.user.UserService
-import com.castor.bookrecorder.core.domain.model.Character
 import com.castor.bookrecorder.core.domain.repository.SyncRepository
-import com.castor.bookrecorder.core.domain.repository.mappers.toBookEntity
-import com.castor.bookrecorder.core.domain.repository.mappers.toCharacter
-import com.castor.bookrecorder.core.domain.repository.mappers.toEntity
 import javax.inject.Inject
 
 class SyncRepositoryImpl @Inject constructor(
@@ -58,7 +54,7 @@ class SyncRepositoryImpl @Inject constructor(
                         listCharacter.add(newCharacter)
                     }
                 }
-                bookDao.cleanAndUpsertBook(listBookEntity)
+                bookDao.overwriteBooks(listBookEntity)
                 characterDao.cleanAndUpsertCharacter(listCharacter)
             }catch (e: Exception){
                 e.printStackTrace()

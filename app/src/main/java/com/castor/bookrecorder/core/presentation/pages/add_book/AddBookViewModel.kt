@@ -42,7 +42,8 @@ data class BookState(
     val notes: String? = null,
     val summary: String? = null,
     val quotes: String? = null,
-    val isFinished: Boolean = false
+    val isFinished: Boolean = false,
+    val isFavorite: Boolean = false
 )
 
 @HiltViewModel
@@ -81,7 +82,8 @@ class AddBookViewModel @Inject constructor(
                         startDate = null,
                         finishDate = null,
                         coverImageUri = null,
-                        userID = getCurrentUserIdUseCase() ?: ""
+                        userID = getCurrentUserIdUseCase() ?: "",
+                        isFavorite = state.value.isFavorite
                     )
                     saveBook(book)
                 }catch (e: Exception){
@@ -138,7 +140,8 @@ class AddBookViewModel @Inject constructor(
                         notes = book.notes,
                         summary = book.summary,
                         quotes = book.quotes,
-                        isFinished = book.isFinished
+                        isFinished = book.isFinished,
+                        isFavorite = book.isFavorite
                     )
                 }
             }

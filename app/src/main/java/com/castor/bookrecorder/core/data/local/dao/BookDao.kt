@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import androidx.room.Upsert
 import com.castor.bookrecorder.core.data.local.entity.BookEntity
 import kotlinx.coroutines.flow.Flow
@@ -45,7 +46,7 @@ interface BookDao {
     fun getFavoriteBooks(): Flow<List<BookEntity>>
 
     @Transaction
-    suspend fun cleanAndUpsertBook(bookEntityList: List<BookEntity> ){
+    suspend fun overwriteBooks(bookEntityList: List<BookEntity> ){
         val existingBooks: List<String> = bookEntityList.map { it.id } // Get existing books by their IDs
         deleteBooksNotInIds(existingBooks) // Delete books that are not in the new list
         insertBooks(bookEntityList)

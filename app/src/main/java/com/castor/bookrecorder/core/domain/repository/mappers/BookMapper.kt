@@ -18,7 +18,8 @@ fun Book.toBookEntity(): BookEntity = BookEntity(
     quotes = this.quotes,
     coverImageUri = this.coverImageUri,
     isFinished = this.isFinished,
-    userID = this.userID
+    userID = this.userID,
+    isFavorite = this.isFavorite
 )
 
 fun BookEntity.toBook(): Book = Book(
