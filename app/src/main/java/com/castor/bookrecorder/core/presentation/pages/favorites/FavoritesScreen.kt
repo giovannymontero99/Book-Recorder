@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -109,7 +110,7 @@ fun BookItem(
 
             IconButton(onClick = onFavoriteClick) {
                 Icon(
-                    imageVector = Icons.Default.Star,
+                    imageVector = Icons.Default.Favorite,
                     contentDescription = "Remove from favorites",
                     tint = MaterialTheme.colorScheme.primary
                 )

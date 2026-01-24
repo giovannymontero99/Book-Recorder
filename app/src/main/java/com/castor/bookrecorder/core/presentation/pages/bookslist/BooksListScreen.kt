@@ -15,6 +15,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -189,7 +191,7 @@ fun BookTitleItem(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                val icon = if (isFavorite) Icons.Default.Star else Icons.Default.StarBorder
+                val icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder
                 val iconColor = if (isFavorite) MaterialTheme.colorScheme.primary else Color.Gray
                 IconButton(
                     onClick = {
