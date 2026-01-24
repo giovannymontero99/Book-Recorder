@@ -22,8 +22,8 @@ class FavoritesViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getFavoriteBooksUseCase().collectLatest {
-                _books.update { it }
+            getFavoriteBooksUseCase().collectLatest { books ->
+                _books.update { books }
             }
         }
     }
