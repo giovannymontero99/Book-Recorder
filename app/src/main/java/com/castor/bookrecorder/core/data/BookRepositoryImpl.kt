@@ -8,6 +8,7 @@ import com.castor.bookrecorder.core.domain.repository.BookRepository
 import com.castor.bookrecorder.core.domain.repository.mappers.toBook
 import com.castor.bookrecorder.core.domain.repository.mappers.toBookEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -70,9 +71,11 @@ class BookRepositoryImpl @Inject constructor(
     }
 
     override fun getFavoriteBooks(): Flow<List<Book>> {
-        return bookDao.getFavoriteBooks()
+        val favoriteBooks = bookDao.getFavoriteBooks()
             .map {
-                list -> list.map { entity -> entity.toBook() }
+                    list -> list.map { entity -> entity.toBook() }
             }
+
+        return favoriteBooks
     }
 }
