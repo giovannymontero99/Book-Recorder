@@ -84,4 +84,12 @@ class BookServiceImpl @Inject constructor(
             .document(bookID)
             .delete()
     }
+
+    override suspend fun addToFavorite(bookID: String, isFavorite: Boolean): Void {
+        return firebaseFirestore
+            .collection("books")
+            .document(bookID)
+            .set(hashMapOf("isFavorite" to isFavorite), SetOptions.merge())
+            .await()
+    }
 }

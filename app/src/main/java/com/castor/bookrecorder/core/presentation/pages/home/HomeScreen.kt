@@ -1,236 +1,228 @@
 package com.castor.bookrecorder.core.presentation.pages.home
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import com.castor.bookrecorder.R
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import coil3.compose.AsyncImage
-import com.castor.bookrecorder.R
-import com.castor.bookrecorder.core.presentation.component.CardBorder
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.castor.bookrecorder.core.presentation.navigation.BooksListRoute
+import com.castor.bookrecorder.core.presentation.navigation.FavoritesRoute
+import com.castor.bookrecorder.core.presentation.navigation.MemoryBoxRoute
+import com.castor.bookrecorder.core.presentation.pages.bookslist.BooksListScreen
+import com.castor.bookrecorder.core.presentation.pages.favorites.FavoritesScreen
+import kotlinx.coroutines.launch
+
+data class NavItem(
+    val label: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val route: Any
+)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = hiltViewModel(),
     onNavigateToBookDetail: (String, String) -> Unit,
     onNavigateToAddBook: () -> Unit,
     onNavigateToEditBook: (String) -> Unit,
     onNavigateToAccount: () -> Unit
 ) {
-    val booksList by viewModel.booksList.collectAsState()
-    val onClick = viewModel::onClick
-    val auth = Firebase.auth
 
-    val navigationState by viewModel.navigationState.collectAsState()
+    // App Bottom Bar handler
+    var selectedItemIndex by rememberSaveable { mutableIntStateOf(0) }
+    val items = listOf(
+        NavItem(
+            stringResource(R.string.home),
+            Icons.Filled.Home, Icons.Outlined.Home,
+            BooksListRoute
+        ),
+        NavItem(stringResource(R.string.favorites), Icons.Filled.Favorite, Icons.Outlined.FavoriteBorder, FavoritesRoute),
+        NavItem(stringResource(R.string.memory_box), Icons.Filled.Search, Icons.Outlined.Search,
+            MemoryBoxRoute
+        )
+    )
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { onNavigateToAddBook() }) {
-                Icon(Icons.Filled.Add, contentDescription = "Add Book")
-            }
-        },
-        topBar = {
-            TopAppBar(
-                actions = {
-                    if(auth.currentUser?.photoUrl == null){
-                        Image(
-                            painter = painterResource(R.drawable.userphoto_desnt_exist),
-                            contentDescription = "User profile picture",
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .size(30.dp)
-                                .clip(CircleShape)
-                                .clickable{ onNavigateToAccount() }
-                        )
-                    }else{
-                        AsyncImage(
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .size(30.dp)
-                                .clip(CircleShape)
-                                .clickable{ onNavigateToAccount() },
-                            model =  auth.currentUser?.photoUrl,
-                            contentDescription = "User profile picture"
-                        )
-                    }
+    // Navigation State
+    val navController = rememberNavController()
 
-                },
+    // Navigation state
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-                title = {
-                    Text(text = stringResource(R.string.library), color = MaterialTheme.colorScheme.background)
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier.width(300.dp),
+                drawerContainerColor = Color(0xFFE8E8E8),
+            ) {
+                Box(
+                   modifier = Modifier
+                       .fillMaxWidth()
+                       .height(150.dp)
+                ){
                 }
-            )
-        },
-        modifier = Modifier.fillMaxSize()
-    ) { innerPadding ->
+                Box(
+                   modifier = Modifier
+                       .fillMaxSize()
+                       .background(Color.White)
+                       .weight(1f)
 
-        LazyColumn(
-            modifier = modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp),
-            contentPadding = PaddingValues(vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-
-            items(booksList){ item ->
-                BookTitleItem(
-                    title = item.title,
-                    author = item.author,
-                    onDelete = {
-                        onClick(HomeEvent.DeleteBook(item.id))
-                    },
-                    onClick = {
-                        onNavigateToBookDetail(item.id, item.title)
-                    },
-                    onEdit = {
-                        onNavigateToEditBook(item.id)
+                ){
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp),
+                        verticalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        NavigationDrawerItem(
+                            label = { Text("Profile") },
+                            selected = false,
+                            onClick = {
+                                onNavigateToAccount()
+                            },
+                            modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
+                            colors = NavigationDrawerItemDefaults.colors(
+                                selectedTextColor = Color.Black,
+                                unselectedTextColor = Color.Black,
+                                unselectedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                            ),
+                            icon = { Icon(Icons.Default.Person, contentDescription = null) }
+                        )
                     }
-                )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Developed by Giovanny Montero", fontSize = MaterialTheme.typography.bodySmall.fontSize)
+                }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
-@Composable
-fun BookTitleItem(
-    modifier: Modifier = Modifier,
-    title: String,
-    author: String = "",
-    onDelete: () -> Unit,
-    onEdit: () -> Unit = {},
-    onClick: () -> Unit,
-) {
-
-    val interactionSource = remember { MutableInteractionSource() }
-    var itemSelected by remember { mutableStateOf(false) }
-
-    CardBorder(
-        modifier = modifier
-            .fillMaxWidth()
-            .combinedClickable(
-                interactionSource = interactionSource,
-                indication = null,
-                onClick = onClick,
-                onLongClick = {
-                    itemSelected = true
+    ) {
+        Scaffold(
+            floatingActionButton = {
+                if(selectedItemIndex == 0){
+                    FloatingActionButton(onClick = { onNavigateToAddBook() }) {
+                        Icon(Icons.Filled.Add, contentDescription = "Add Book")
+                    }
                 }
-            ),
-        border = if (itemSelected) BorderStroke(width = 3.dp, color = MaterialTheme.colorScheme.primary) else BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary)
-    ){
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalAlignment = Alignment.Start,
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text(text = title, style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
-
-                IconButton(onClick = { itemSelected = true }) {
-                    Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "Delete book")
-                    if(itemSelected){
-                        DropdownMenu(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            expanded = true,
-                            onDismissRequest = { itemSelected = false }
-                        ) {
-                            DropdownMenuItem(
-                                colors = MenuDefaults.itemColors(
-                                    textColor = MaterialTheme.colorScheme.background,
-                                    leadingIconColor = MaterialTheme.colorScheme.background
-                                ),
-                                text = { Text(stringResource(R.string.delete)) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Delete,
-                                        contentDescription = stringResource(R.string.delete)
-                                    )
-                                },
-                                onClick = {
-                                    onDelete()
-                                    itemSelected = false
-                                }
-                            )
-                            DropdownMenuItem(
-                                colors = MenuDefaults.itemColors(
-                                    textColor = MaterialTheme.colorScheme.background,
-                                    leadingIconColor = MaterialTheme.colorScheme.background
-                                ),
-                                text = { Text(stringResource(R.string.edit)) },
-                                leadingIcon = {
-                                    Icon(
-                                        imageVector = Icons.Filled.Create,
-                                        contentDescription = stringResource(R.string.edit)
-                                    )
-                                },
-                                onClick = {
-                                    onEdit()
-                                    itemSelected = false
-                                }
-                            )
-
+            },
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(items[selectedItemIndex].label, color = MaterialTheme.colorScheme.background)
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = {
+                            scope.launch {
+                                drawerState.open()
+                            }
+                        }) {
+                            Icon(imageVector = Icons.Default.Menu, contentDescription = null, tint = MaterialTheme.colorScheme.background)
                         }
                     }
+                )
+            },
+            bottomBar = {
+                BottomAppBar(
+                    modifier = Modifier
+                        .border(
+                            width = 1.dp,
+                            color = Color(0xFFDFDFE3)
+                        ),
+                    containerColor = MaterialTheme.colorScheme.background,
+                    contentColor = MaterialTheme.colorScheme.onBackground,
+                ){
+                    items.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = selectedItemIndex == index,
+                            onClick = {
+                                selectedItemIndex = index
+                                navController.navigate(item.route)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if (index == selectedItemIndex) {
+                                        item.selectedIcon
+                                    } else item.unselectedIcon,
+                                    contentDescription = item.label
+                                )
+                            }
+                        )
+                    }
                 }
             }
+        ){ innerPadding ->
 
-            Text(text = author, style = MaterialTheme.typography.bodyMedium)
+            NavHost(modifier = Modifier.padding(innerPadding),navController = navController, startDestination = BooksListRoute){
+                composable<BooksListRoute>{
+                    BooksListScreen(
+                        onNavigateToEditBook = onNavigateToEditBook,
+                        onNavigateToBookDetail = onNavigateToBookDetail
+                    )
+                }
+                composable<FavoritesRoute> {
+                    FavoritesScreen()
+                }
+
+                composable<MemoryBoxRoute> {
+
+                }
+            }
         }
-
-
-
     }
 }
 

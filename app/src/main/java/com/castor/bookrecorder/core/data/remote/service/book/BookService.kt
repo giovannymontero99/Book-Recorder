@@ -16,4 +16,6 @@ interface BookService {
 
     fun removeBook(bookID: String) : Task<Void>
 
+    suspend fun addToFavorite(bookID: String, isFavorite: Boolean) : Void
+
 }

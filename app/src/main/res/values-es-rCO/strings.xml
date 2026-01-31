@@ -29,7 +29,7 @@
     <string name="invalid_email">Correo o contraseña invalidos</string>
     <string name="email_and_password_required">Email y contraseña son requeridos</string>
     <string name="dont_have_an_account">"¿No tienes cuenta? "</string>
-    <string name="already_have_an_account">"Ya tienes una cuenta? "</string>
+    <string name="already_have_an_account">"¿Tienes una cuenta? "</string>
     <string name="continue_with_google">Continua con Google</string>
     <string name="delete_character">Eliminar personaje</string>
     <string name="are_you_sure_you_want_to_delete_this_character">¿Desea eliminar el personaje?</string>
@@ -37,4 +37,12 @@
     <string name="cancel">Cancelar</string>
     <string name="edit">Editar</string>
     <string name="sync_data">Sincronizar datos</string>
+    <string name="are_you_sure_you_want_to_delete_this_book">¿Desea eliminar este libro?</string>
+    <string name="home">Inicio</string>
+    <string name="favorites">Favoritos</string>
+    <string name="memory_box">Caja de memoria</string>
+    <string name="add_favorites">Agregar a favoritos</string>
+    <string name="register_with_google">Registrar con Google</string>
+    <string name="invalid_same_password">Las contraseñas no coinciden</string>
+    <string name="back_login">Volver a login</string>
 </resources>

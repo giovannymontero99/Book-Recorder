@@ -18,5 +18,6 @@ data class BookEntity(
     val quotes: String? = null,
     val coverImageUri: String? = null,
     val isFinished: Boolean = false,
-    val userID: String
+    val userID: String,
+    val isFavorite: Boolean = false
 )

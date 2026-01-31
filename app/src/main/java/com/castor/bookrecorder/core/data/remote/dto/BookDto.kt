@@ -15,5 +15,6 @@ data class BookDto(
     val coverImageUri: String? = null,
     val isFinished: Boolean = false,
     val userID: String = "",
-    val characters: List<CharacterDto> = emptyList()
+    val characters: List<CharacterDto> = emptyList(),
+    val isFavorite: Boolean = false
 )

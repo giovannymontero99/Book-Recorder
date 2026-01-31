@@ -14,5 +14,6 @@ data class Book(
     val quotes: String? = null,
     val coverImageUri: String? = null,
     var isFinished: Boolean = false,
-    val userID: String = ""
+    val userID: String = "",
+    val isFavorite: Boolean = false
 )
