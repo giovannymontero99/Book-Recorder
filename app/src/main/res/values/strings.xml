@@ -42,4 +42,6 @@
     <string name="memory_box">Memory Box</string>
     <string name="add_favorites">Add to favorites</string>
     <string name="register_with_google">Register with Google</string>
+    <string name="invalid_same_password" >Oops! Your passwords don’t match</string>
+    <string name="back_login">Back to login</string>
 </resources>
