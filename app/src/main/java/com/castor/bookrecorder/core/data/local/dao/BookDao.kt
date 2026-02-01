@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import androidx.room.Upsert
 import com.castor.bookrecorder.core.data.local.entity.BookEntity
 import kotlinx.coroutines.flow.Flow
@@ -42,8 +41,8 @@ interface BookDao {
     @Query("UPDATE books SET isFavorite = :isFavorite WHERE id = :id")
     suspend fun updateBookFavoriteStatus(id: String, isFavorite: Boolean)
 
-    @Query("SELECT * FROM books WHERE isFavorite = 1")
-    fun getFavoriteBooks(): Flow<List<BookEntity>>
+    @Query("SELECT * FROM books WHERE isFavorite = 1 AND userID = :userID")
+    fun getFavoriteBooksByUserId(userID: String): Flow<List<BookEntity>>
 
     @Transaction
     suspend fun overwriteBooks(bookEntityList: List<BookEntity> ){

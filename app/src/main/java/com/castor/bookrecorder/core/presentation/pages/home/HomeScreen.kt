@@ -125,7 +125,7 @@ fun HomeScreen(
                         verticalArrangement = Arrangement.spacedBy(6.dp)
                     ) {
                         NavigationDrawerItem(
-                            label = { Text("Profile") },
+                            label = { Text( stringResource(R.string.profile)) },
                             selected = false,
                             onClick = {
                                 onNavigateToAccount()
