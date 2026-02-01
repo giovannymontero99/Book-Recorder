@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,7 +30,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.core.domain.model.Book
-import com.castor.bookrecorder.core.presentation.ui.theme.PurpleGrey40
 
 @Composable
 fun FavoritesScreen(
@@ -51,9 +49,7 @@ fun FavoritesScreen(
         items(books, key = { it.id }) { book ->
             BookItem(
                 book = book,
-                onFavoriteClick = {
-                    // viewModel.onRemoveFavorite(book)
-                }
+                onFavoriteClick = {}
             )
         }
     }
@@ -76,17 +72,6 @@ fun BookItem(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            /*
-            AsyncImage(
-                model = book.coverUrl,
-                contentDescription = "Book cover of ${book.title}",
-                modifier = Modifier
-                    .size(width = 70.dp, height = 100.dp)
-                    .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop
-            )
-
-             */
 
             Spacer(modifier = Modifier.width(16.dp))
 
