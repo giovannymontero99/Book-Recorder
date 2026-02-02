@@ -14,7 +14,7 @@ interface BookService {
     fun getBookByID(bookID: String): Task<DocumentSnapshot>
     suspend fun setBookByID(bookID: String, book: Book): Void
 
-    fun removeBook(bookID: String) : Task<Void>
+    suspend fun removeBook(bookID: String) : Void
 
     suspend fun addToFavorite(bookID: String, isFavorite: Boolean) : Void
 

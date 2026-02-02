@@ -119,7 +119,7 @@ fun BooksListScreen(
                 },
                 title = stringResource(R.string.edit),
                 icon = {
-                    Icon(imageVector = Icons.Default.Edit, contentDescription = "Edit")
+                    Icon(imageVector = Icons.Default.Edit, contentDescription = stringResource(R.string.edit))
                 }
             )
         }
