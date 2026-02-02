@@ -78,11 +78,12 @@ class BookServiceImpl @Inject constructor(
             .await()
     }
 
-    override fun removeBook(bookID: String): Task<Void> {
+    override suspend fun removeBook(bookID: String): Void {
         return firebaseFirestore
             .collection("books")
             .document(bookID)
             .delete()
+            .await()
     }
 
     override suspend fun addToFavorite(bookID: String, isFavorite: Boolean): Void {
