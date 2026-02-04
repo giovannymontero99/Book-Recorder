@@ -34,3 +34,6 @@ object FavoritesRoute
 
 @Serializable
 object MemoryBoxRoute
+
+@Serializable
+object NewBoxMemoryRoute
