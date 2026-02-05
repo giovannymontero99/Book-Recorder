@@ -45,4 +45,5 @@
     <string name="invalid_same_password" >Oops! Your passwords don’t match</string>
     <string name="back_login">Back to login</string>
     <string name="profile">Profile</string>
+    <string name="new_box_memory">New Box Memory</string>
 </resources>

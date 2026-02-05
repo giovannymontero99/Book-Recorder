@@ -16,7 +16,7 @@ import com.castor.bookrecorder.core.presentation.pages.add_book.AddBookScreen
 import com.castor.bookrecorder.core.presentation.pages.book_detail.BookDetailScreen
 import com.castor.bookrecorder.core.presentation.pages.home.HomeScreen
 import com.castor.bookrecorder.core.presentation.pages.login.LoginScreen
-
+import com.castor.bookrecorder.core.presentation.pages.memory_box.new_memory_box.NewBoxMemoryScreen
 
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
@@ -33,20 +33,26 @@ fun NavigationWrapper(
         NavHost(navController = navController, startDestination = if(isLogged) HomeRoute else LoginRoute ){
 
             composable<HomeRoute> {
-                HomeScreen(
-                    onNavigateToAddBook = {
-                        navController.navigate(AddBookRoute)
-                    },
-                    onNavigateToBookDetail = { id, title ->
-                        navController.navigate(BookDetailRoute(id, title))
-                    },
-                    onNavigateToEditBook = { id ->
-                        navController.navigate(EditBookRoute(id))
-                    },
-                    onNavigateToAccount = {
-                        navController.navigate(AccountRoute)
+                HomeScreen{ onNavigateTo ->
+                    when(onNavigateTo){
+                        ScreenDestination.Account -> {
+                            navController.navigate(AccountRoute)
+                        }
+                        ScreenDestination.AddBook -> {
+                            navController.navigate(AddBookRoute)
+                        }
+                        ScreenDestination.AddMemoryBox -> {}
+                        is ScreenDestination.BookDetail -> {
+                            navController.navigate(BookDetailRoute(onNavigateTo.id, onNavigateTo.title))
+                        }
+                        is ScreenDestination.EditBook -> {
+                            navController.navigate(EditBookRoute(onNavigateTo.id))
+                        }
+                        ScreenDestination.NewBoxMemory -> {
+                            navController.navigate(NewBoxMemoryRoute)
+                        }
                     }
-                )
+                }
             }
 
             composable<LoginRoute> {
@@ -114,6 +120,10 @@ fun NavigationWrapper(
                         }
                     }
                 )
+            }
+
+            composable<NewBoxMemoryRoute> {
+                NewBoxMemoryScreen()
             }
         }
     }

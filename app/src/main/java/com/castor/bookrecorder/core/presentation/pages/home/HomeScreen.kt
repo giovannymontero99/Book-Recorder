@@ -56,8 +56,10 @@ import androidx.navigation.compose.rememberNavController
 import com.castor.bookrecorder.core.presentation.navigation.BooksListRoute
 import com.castor.bookrecorder.core.presentation.navigation.FavoritesRoute
 import com.castor.bookrecorder.core.presentation.navigation.MemoryBoxRoute
+import com.castor.bookrecorder.core.presentation.navigation.ScreenDestination
 import com.castor.bookrecorder.core.presentation.pages.bookslist.BooksListScreen
 import com.castor.bookrecorder.core.presentation.pages.favorites.FavoritesScreen
+import com.castor.bookrecorder.core.presentation.pages.memory_box.MemoryBoxScreen
 import kotlinx.coroutines.launch
 
 data class NavItem(
@@ -67,14 +69,10 @@ data class NavItem(
     val route: Any
 )
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onNavigateToBookDetail: (String, String) -> Unit,
-    onNavigateToAddBook: () -> Unit,
-    onNavigateToEditBook: (String) -> Unit,
-    onNavigateToAccount: () -> Unit
+    onNavigateTo: (ScreenDestination) -> Unit
 ) {
 
     // App Bottom Bar handler
@@ -128,7 +126,7 @@ fun HomeScreen(
                             label = { Text( stringResource(R.string.profile)) },
                             selected = false,
                             onClick = {
-                                onNavigateToAccount()
+                                onNavigateTo(ScreenDestination.Account)
                             },
                             modifier = Modifier.padding(NavigationDrawerItemDefaults.ItemPadding),
                             colors = NavigationDrawerItemDefaults.colors(
@@ -154,11 +152,22 @@ fun HomeScreen(
     ) {
         Scaffold(
             floatingActionButton = {
-                if(selectedItemIndex == 0){
-                    FloatingActionButton(onClick = { onNavigateToAddBook() }) {
-                        Icon(Icons.Filled.Add, contentDescription = "Add Book")
+
+                when (items[selectedItemIndex].route) {
+                    is BooksListRoute -> {
+                        FloatingActionButton(onClick = {
+                            onNavigateTo(ScreenDestination.AddBook)
+                        }) {
+                            Icon(Icons.Filled.Add, contentDescription = "Add Book")
+                        }
+                    }
+                    is MemoryBoxRoute -> {
+                        FloatingActionButton(onClick = { onNavigateTo(ScreenDestination.NewBoxMemory) }) {
+                            Icon(Icons.Filled.Add, contentDescription = "Add Memory")
+                        }
                     }
                 }
+
             },
             topBar = {
                 TopAppBar(
@@ -210,8 +219,12 @@ fun HomeScreen(
             NavHost(modifier = Modifier.padding(innerPadding),navController = navController, startDestination = BooksListRoute){
                 composable<BooksListRoute>{
                     BooksListScreen(
-                        onNavigateToEditBook = onNavigateToEditBook,
-                        onNavigateToBookDetail = onNavigateToBookDetail
+                        onNavigateToEditBook = { id ->
+                            onNavigateTo(ScreenDestination.EditBook(id))
+                        },
+                        onNavigateToBookDetail = { id, title ->
+                            onNavigateTo(ScreenDestination.BookDetail(id, title))
+                        }
                     )
                 }
                 composable<FavoritesRoute> {
@@ -219,10 +232,9 @@ fun HomeScreen(
                 }
 
                 composable<MemoryBoxRoute> {
-
+                    MemoryBoxScreen()
                 }
             }
         }
     }
 }
-
