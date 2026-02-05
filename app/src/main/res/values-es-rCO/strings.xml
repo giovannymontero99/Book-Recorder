@@ -46,4 +46,5 @@
     <string name="invalid_same_password">Las contraseñas no coinciden</string>
     <string name="back_login">Volver a login</string>
     <string name="profile">Perfil</string>
+    <string name="new_box_memory">Nueva Caja de Memoria</string>
 </resources>
