@@ -33,7 +33,6 @@ object BooksListRoute
 object FavoritesRoute
 
 @Serializable
-object MemoryBoxRoute
-
-@Serializable
 object NewBoxMemoryRoute
+@Serializable
+object MemoryBoxRoute

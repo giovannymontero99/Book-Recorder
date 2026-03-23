@@ -46,4 +46,15 @@
     <string name="back_login">Back to login</string>
     <string name="profile">Profile</string>
     <string name="new_box_memory">New Box Memory</string>
+    <string name="memory_label">Label</string>
+    <string name="memory_value">Value</string>
+    <string name="memory_type">Type:</string>
+    <string name="memory_type_text">Text</string>
+    <string name="memory_type_number">Number</string>
+    <string name="memory_type_boolean">Boolean</string>
+    <string name="save_memory">Save Memory</string>
+    <string name="no_memories">No memories saved yet</string>
+    <string name="error_number_decimal">The value cannot be decimal. Please enter a whole number.</string>
+    <string name="error_number_out_of_range">The number exceeds the allowed limit (max. 2,147,483,647).</string>
+    <string name="are_you_sure_you_want_to_delete_this_memory">Are you sure you want to delete this memory?</string>
 </resources>

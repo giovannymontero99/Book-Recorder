@@ -123,7 +123,9 @@ fun NavigationWrapper(
             }
 
             composable<NewBoxMemoryRoute> {
-                NewBoxMemoryScreen()
+                NewBoxMemoryScreen(
+                    onNavigateBack = { navController.popBackStack() }
+                )
             }
         }
     }

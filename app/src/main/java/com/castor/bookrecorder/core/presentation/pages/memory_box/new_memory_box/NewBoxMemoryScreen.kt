@@ -1,32 +1,37 @@
 package com.castor.bookrecorder.core.presentation.pages.memory_box.new_memory_box
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Numbers
+import androidx.compose.material.icons.filled.TextFields
+import androidx.compose.material.icons.filled.ToggleOn
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -34,20 +39,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.castor.bookrecorder.R
-import java.util.UUID
-
-// Data class to hold a key-value pair with a unique ID for the list
-data class MemoryField(val id: UUID = UUID.randomUUID(), var key: String, var value: String)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewBoxMemoryScreen(
+    onNavigateBack: () -> Unit,
     viewModel: NewBoxMemoryViewModel = hiltViewModel()
 ) {
-    // This list will hold the key-value fields.
-    // NOTE: For a complete implementation, this list should be managed in your ViewModel
-    // to survive configuration changes and be saved correctly.
-    val memoryFields = remember { mutableStateListOf(MemoryField(key = "", value = "")) }
+    val state by viewModel.state.collectAsState()
+    val handleEvent = viewModel::handleEvent
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    LaunchedEffect(state.isSaved) {
+        if (state.isSaved) {
+            onNavigateBack()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -61,81 +68,156 @@ fun NewBoxMemoryScreen(
             )
         }
     ) { innerPadding ->
-
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            LazyColumn(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                itemsIndexed(memoryFields) { index, field ->
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        OutlinedTextField(
-                            value = field.key,
-                            onValueChange = { updatedKey ->
-                                memoryFields[index] = memoryFields[index].copy(key = updatedKey)
-                            },
-                            label = { Text("Key") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
-                                imeAction = ImeAction.Next,
-                                capitalization = KeyboardCapitalization.Sentences
-                            )
-                        )
+            OutlinedTextField(
+                value = state.text,
+                onValueChange = { handleEvent(NewBoxMemoryEvent.OnTextChange(it)) },
+                label = { Text(stringResource(R.string.memory_label)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next,
+                    capitalization = KeyboardCapitalization.Sentences
+                )
+            )
 
-                        OutlinedTextField(
-                            value = field.value,
-                            onValueChange = { updatedValue ->
-                                memoryFields[index] = memoryFields[index].copy(value = updatedValue)
-                            },
-                            label = { Text("Value") },
-                            singleLine = true,
-                            modifier = Modifier.fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
-                                imeAction = ImeAction.Done,
-                                capitalization = KeyboardCapitalization.Sentences
-                            )
-                        )
-                    }
-                }
+            MemoryTypeSelector(
+                selectedType = state.type,
+                onTypeSelected = { handleEvent(NewBoxMemoryEvent.OnTypeChange(it)) }
+            )
 
-                item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        IconButton(onClick = { memoryFields.add(MemoryField(key = "", value = "")) }) {
-                            Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = "Add another memory field"
-                            )
-                        }
-                    }
+            if (state.type == MemoryValueType.BOOLEAN) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.memory_value),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Switch(
+                        checked = state.booleanValue,
+                        onCheckedChange = { handleEvent(NewBoxMemoryEvent.OnBooleanValueChange(it)) }
+                    )
                 }
+            } else {
+                OutlinedTextField(
+                    value = state.value,
+                    onValueChange = { handleEvent(NewBoxMemoryEvent.OnValueChange(it)) },
+                    label = { Text(stringResource(R.string.memory_value)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    isError = state.valueError != null,
+                    supportingText = state.valueError?.let { errorRes ->
+                        { Text(stringResource(errorRes)) }
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = if (state.type == MemoryValueType.NUMBER)
+                            KeyboardType.Number else KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                        capitalization = if (state.type == MemoryValueType.TEXT)
+                            KeyboardCapitalization.Sentences else KeyboardCapitalization.None
+                    )
+                )
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    // TODO: Call ViewModel to save the `memoryFields` list
-                    // Example: viewModel.onEvent(NewBoxMemoryEvent.OnSave(memoryFields))
+                    keyboardController?.hide()
+                    handleEvent(NewBoxMemoryEvent.OnSave)
                 },
+                enabled = !state.isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(text = "Save Memories")
+                Text(stringResource(R.string.save_memory))
             }
         }
+    }
+}
+
+@Composable
+private fun MemoryTypeSelector(
+    selectedType: MemoryValueType,
+    onTypeSelected: (MemoryValueType) -> Unit
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(R.string.memory_type),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        MemoryTypeIconButton(
+            isSelected = selectedType == MemoryValueType.TEXT,
+            onClick = { onTypeSelected(MemoryValueType.TEXT) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.TextFields,
+                    contentDescription = stringResource(R.string.memory_type_text)
+                )
+            }
+        )
+
+        MemoryTypeIconButton(
+            isSelected = selectedType == MemoryValueType.NUMBER,
+            onClick = { onTypeSelected(MemoryValueType.NUMBER) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Numbers,
+                    contentDescription = stringResource(R.string.memory_type_number)
+                )
+            }
+        )
+
+        MemoryTypeIconButton(
+            isSelected = selectedType == MemoryValueType.BOOLEAN,
+            onClick = { onTypeSelected(MemoryValueType.BOOLEAN) },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.ToggleOn,
+                    contentDescription = stringResource(R.string.memory_type_boolean)
+                )
+            }
+        )
+    }
+}
+
+@Composable
+private fun MemoryTypeIconButton(
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    icon: @Composable () -> Unit
+) {
+    val borderColor = if (isSelected)
+        MaterialTheme.colorScheme.primary
+    else
+        MaterialTheme.colorScheme.outline
+
+    val tint = if (isSelected)
+        MaterialTheme.colorScheme.primary
+    else
+        MaterialTheme.colorScheme.onSurfaceVariant
+
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier.border(
+            width = 2.dp,
+            color = borderColor,
+            shape = RoundedCornerShape(8.dp)
+        )
+    ) {
+        CompositionLocalProvider(LocalContentColor provides tint, content = icon)
     }
 }
