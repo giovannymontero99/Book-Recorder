@@ -46,4 +46,16 @@
     <string name="invalid_same_password">Las contraseñas no coinciden</string>
     <string name="back_login">Volver a login</string>
     <string name="profile">Perfil</string>
+    <string name="new_box_memory">Nueva Caja de Memoria</string>
+    <string name="memory_label">Etiqueta</string>
+    <string name="memory_value">Valor</string>
+    <string name="memory_type">Tipo:</string>
+    <string name="memory_type_text">Texto</string>
+    <string name="memory_type_number">Número</string>
+    <string name="memory_type_boolean">Booleano</string>
+    <string name="save_memory">Guardar memoria</string>
+    <string name="no_memories">Aún no hay memorias guardadas</string>
+    <string name="error_number_decimal">El valor no puede ser decimal. Por favor ingresa un número entero.</string>
+    <string name="error_number_out_of_range">El número excede el límite permitido (máx. 2,147,483,647).</string>
+    <string name="are_you_sure_you_want_to_delete_this_memory">¿Estás seguro de que deseas eliminar esta memoria?</string>
 </resources>

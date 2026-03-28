@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.castor.bookrecorder.core.data.local.database.AppDatabase
 import com.castor.bookrecorder.core.data.local.migrations.MIGRATION_1_2
+import com.castor.bookrecorder.core.data.local.migrations.MIGRATION_2_3
+import com.castor.bookrecorder.core.data.local.migrations.MIGRATION_3_4
+import com.castor.bookrecorder.core.data.local.migrations.MIGRATION_4_5
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +26,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "bookrecorde_db"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
             .build()
     }
 
@@ -44,5 +47,11 @@ object DatabaseModule {
     fun provideCharacterDao(
         db: AppDatabase
     ) = db.characterDao
+
+    @Provides
+    @Singleton
+    fun provideMemoryDao(
+        db: AppDatabase
+    ) = db.memoryDao
 
 }
